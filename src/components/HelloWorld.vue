@@ -4,7 +4,7 @@
     <!-- https://www.npmjs.com/package/@teckel/vue-barcode-reader -->
     <v-row v-if="!scannerReady" class="mb-3">
       <v-col cols="12">
-        <v-btn @click="bootUpScanner">
+        <v-btn color="secondary" @click="bootUpScanner">
           Boot Up Scanner
         </v-btn>
       </v-col>
@@ -18,7 +18,7 @@
         <p class="text-green">{{ decodedText }}</p>
 
       </v-col>
-      <v-col cols="12" md="6">
+      <v-col cols="12" md="12">
         <StreamBarcodeReader
           torch
           no-front-cameras

@@ -10,7 +10,7 @@ import { fileURLToPath, URL } from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/skannin/",
+  base:'/skannin/',
   plugins: [
     Vue({
       template: { transformAssetUrls },
