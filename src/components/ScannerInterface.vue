@@ -1,13 +1,13 @@
 <template>
   <v-row class="my-5">
     <v-col cols="12">
-      <h1 class="text-amber text-center text-h5">
+      <h1 class="text-amber text-center text-h5 mb-5">
         Scan a barcode.
       </h1>
       <p class="text-red">
         {{ scanStatus }}
       </p>
-      <ScannerOutput :scanned-monster="scannedMonster" />
+      <ScannerOutput :scanner-result="scannerResult" />
     </v-col>
     <v-col
       cols="12"
@@ -33,8 +33,11 @@ import { computed, ref, watch, onMounted } from 'vue'
 import { StreamBarcodeReader } from '@teckel/vue-barcode-reader'
 import { loadData, saveData } from '@/composables/useLocalStorage.js'
 
+import { monsterDirectory } from '@/composables/useMonsterList.js'
+import { useRandomNumber, useInterpretNumber } from '@/composables/useNumberInterpretor.js'
+
 const successfulScan = ref(false)
-const scannedMonster = ref(null)
+const scannerResult = ref(null)
 const scannerReady = ref(false)
 const scanStatus = ref('')
 const priorScans = ref([])
@@ -50,7 +53,7 @@ onMounted(() => {
     seed.value = savedSeed
   }
   else {
-    saveData('savedSeed', getRandom13DigitNumber())
+    saveData('savedSeed', useRandomNumber())
   }
 })
 
@@ -59,42 +62,54 @@ const onLoaded = () => {
 }
 
 const onDecode = (result) => {
-if (successfulScan.value === true) {
-  console.log('scan already decoding')
-  return
-}
-if (priorScans.value.includes(result)) {
-  scanStatus.value = "That barcode has already been scanned. Try another one."
-  return
-}
-interpretScanResult(result)
-}
-
-const interpretScanResult = (result) => {
-priorScans.value.push(result)
-let sum = sumDigits(result + seed.value)
-
-if (sum > monsterDirectory.value.length) {
-  sum = sum % monsterDirectory.value.length
+  if (successfulScan.value === true) {
+    console.log('scan already decoding')
+    return
+  }
+  if (priorScans.value.includes(result)) {
+    scanStatus.value = "That barcode has already been scanned. Try another one."
+    return
+  }
+  interpretScanResult(result)
 }
 
-if (monsterDirectory.value[sum].currentLevel < 3){
-  monsterDirectory.value[sum].currentLevel += 1
+const sumDigits = (number) => {
+  let sum = 0;
+  const numStr = Math.abs(number).toString(); // Convert to string and handle negative numbers
+
+  for (let i = 0; i < numStr.length; i++) {
+    sum += parseInt(numStr[i]); // Parse each digit and add to sum
+  }
+
+  return sum;
 }
 
-scannedMonster.value = monsterDirectory.value[sum]
-successfulScan.value = true
+const interpretScanResult = (result = useRandomNumber()) => {
+
+	useInterpretNumber(result)
+  priorScans.value.push(result)
+  console.log('seed', seed.value)
+  console.log('result', result)
+  console.log('combined', result + seed.value)
+  let sum = sumDigits(result + seed.value)
+  console.log('sum', sum)
+
+
+  if (sum > monsterDirectory.value.length) {
+    sum = sum % monsterDirectory.value.length
+  }
+
+  if (monsterDirectory.value[sum].currentLevel < 3){
+    monsterDirectory.value[sum].currentLevel += 1
+  }
+
+  scannerResult.value = monsterDirectory.value[sum]
+  successfulScan.value = true
 }
 
 defineExpose({
   interpretScanResult,
 })
-
-const getRandom13DigitNumber = () => {
-  const min = 1000000000000; // Minimum 13-digit number
-  const max = 9999999999999; // Maximum 13-digit number
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
 
 watch(priorScans, (newValue) => {
   saveData('savedPriorScans', newValue);

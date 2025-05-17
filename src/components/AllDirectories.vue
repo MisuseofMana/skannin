@@ -10,7 +10,7 @@
       size="large"
       color="amber-accent-4"
       class="mb-5"
-      @click="scannerComponent.interpretScanResult(getRandom13DigitNumber())"
+      @click="scannerComponent.interpretScanResult()"
     >
       Simulate Scanner Generation
     </v-btn>
@@ -108,17 +108,6 @@ const decodedText = ref('')
 
 const getMonsterImage = ({type, name}) => {
   return new URL(`../assets/monsters/${type}/${name}.png`, import.meta.url).href
-}
-
-const sumDigits = (number) => {
-let sum = 0;
-const numStr = Math.abs(number).toString(); // Convert to string and handle negative numbers
-
-for (let i = 0; i < numStr.length; i++) {
-  sum += parseInt(numStr[i]); // Parse each digit and add to sum
-}
-
-return sum;
 }
 
 </script>

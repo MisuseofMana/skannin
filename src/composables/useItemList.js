@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import { DiscoverableTypes as DT } from './useDiscoverableTypes'
 
 export const ItemTypes = {
     CONSUMABLE: 'consumable', 
@@ -15,6 +16,7 @@ export const Stats = {
 
 export const bookDirectory = ref([
     {
+      classification: DT.BOOK,
       quantity: 0,
       value: 1,
       name: "Armor Book",
@@ -23,6 +25,7 @@ export const bookDirectory = ref([
       description: 'A book that increases a monsters maximum defense by one.'
     },
     {
+      classification: DT.BOOK,
       quantity: 0,
       value: 1,
       name: "Attack Book",
@@ -31,6 +34,7 @@ export const bookDirectory = ref([
       description: 'A book that increases a monsters maximum attack by one.'
     },
     {
+      classification: DT.BOOK,
       quantity: 0,
       value: 1,
       name: "Health Book",
@@ -42,6 +46,7 @@ export const bookDirectory = ref([
 
 export const gemDirectory = ref([
     {
+      classification: DT.GEM,
       quantity: 0,
       value: 1,
       name: "Air Gem",
@@ -50,6 +55,7 @@ export const gemDirectory = ref([
       description: 'An air element gem, can level up an air monster by one level.'
     },
     {
+      classification: DT.GEM,
       quantity: 0,
       value: 1,
       name: "Earth Gem",
@@ -58,6 +64,7 @@ export const gemDirectory = ref([
       description: 'An earth element gem, can level up an earth monster by one level.'
     },
     {
+      classification: DT.GEM,
       quantity: 0,
       value: 1,
       name: "Fire Gem",
@@ -66,6 +73,7 @@ export const gemDirectory = ref([
       description: 'A fire element gem, can level up a fire monster by one level.'
     },
     {
+      classification: DT.GEM,
       quantity: 0,
       value: 1,
       name: "Water Gem",
@@ -77,6 +85,7 @@ export const gemDirectory = ref([
 
 export const consumableDirectory = ref([
   {
+    classification: DT.CONSUMABLE,
     quantity: 0,
     value: 1,
     damage: 0,
@@ -88,6 +97,7 @@ export const consumableDirectory = ref([
     description: 'A ripe banana with the sticker still intact, restores a monster health by one.'
   },
   {
+    classification: DT.CONSUMABLE,
     quantity: 0,
     value: 2,
     damage: 0,
@@ -99,6 +109,7 @@ export const consumableDirectory = ref([
     description: 'A chocolate chip cookie, heals a monsters health by two.'
   },
   {
+    classification: DT.CONSUMABLE,
     quantity: 0,
     value: 3,
     damage: 0,
@@ -110,6 +121,7 @@ export const consumableDirectory = ref([
     description: 'A bologna sandwich, heals a monsters health by three.'
   },
   {
+    classification: DT.CONSUMABLE,
     quantity: 0,
     value: 4,
     damage: 0,
@@ -121,6 +133,7 @@ export const consumableDirectory = ref([
     description: 'A ripe banana with the sticker still intact, restores a monster health by three.'
   },
   {
+    classification: DT.CONSUMABLE,
     quantity: 0,
     value: 5,
     damage: 0,
@@ -132,6 +145,7 @@ export const consumableDirectory = ref([
     description: 'A magic potion, heals a monsters health by five.'
   },
   {
+    classification: DT.CONSUMABLE,
     quantity: 0,
     value: 6,
     damage: 0,
@@ -143,6 +157,7 @@ export const consumableDirectory = ref([
     description: 'A tangy radish, heals a monsters health by six.'
   },
   {
+    classification: DT.CONSUMABLE,
     quantity: 0,
     value: 1,
     damage: 1,
@@ -154,6 +169,7 @@ export const consumableDirectory = ref([
     description: 'A pack of lucky strikes longs, increases monsters atttack by one but reduce health by one.'
   },
   {
+    classification: DT.CONSUMABLE,
     quantity: 0,
     value: 999,
     damage: 0,
@@ -168,6 +184,7 @@ export const consumableDirectory = ref([
 
 export const equipmentDirectory = ref([
   {
+    classification: DT.EQUIPMENT,
     quantity: 0,
     value: 1,
     damage: 0,
@@ -179,6 +196,7 @@ export const equipmentDirectory = ref([
     description: 'Raises a monsters defense by one when equipped.'
   },
   {
+    classification: DT.EQUIPMENT,
     quantity: 0,
     value: 1,
     damage: 0,
@@ -190,6 +208,7 @@ export const equipmentDirectory = ref([
     description: 'Raises a monsters defense by one when equipped.'
   },
   {
+    classification: DT.EQUIPMENT,
     quantity: 0,
     value: 2,
     damage: 0,
@@ -201,6 +220,7 @@ export const equipmentDirectory = ref([
     description: 'Raises a monsters defense by two when equipped.'
   },
   {
+    classification: DT.EQUIPMENT,
     quantity: 0,
     value: 2,
     damage: 0,
@@ -212,6 +232,7 @@ export const equipmentDirectory = ref([
     description: 'Raises a monsters defense by two when equipped.'
   },
   {
+    classification: DT.EQUIPMENT,
     quantity: 0,
     value: 3,
     damage: 0,
@@ -223,6 +244,7 @@ export const equipmentDirectory = ref([
     description: 'Raises a monsters defense by three when equipped.'
   },
   {
+    classification: DT.EQUIPMENT,
     quantity: 0,
     value: 4,
     damage: 0,
@@ -234,6 +256,7 @@ export const equipmentDirectory = ref([
     description: 'Raises a monsters defense by four when equipped.'
   },
   {
+    classification: DT.EQUIPMENT,
     quantity: 0,
     value: 1,
     damage: 0,
@@ -245,6 +268,7 @@ export const equipmentDirectory = ref([
     description: 'Raises a monsters attack by one when equipped.'
   },
   {
+    classification: DT.EQUIPMENT,
     quantity: 0,
     value: 2,
     damage: 0,
@@ -256,6 +280,7 @@ export const equipmentDirectory = ref([
     description: 'Raises a monsters attack by two when equipped.'
   },
   {
+    classification: DT.EQUIPMENT,
     quantity: 0,
     value: 3,
     damage: 0,
