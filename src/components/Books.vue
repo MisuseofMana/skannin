@@ -4,19 +4,26 @@
       v-for="(item, index) in bookDirectory"
       :key="item.name"
       cols="12"
-      md="4"
+      md="6"
     >
       <v-sheet
         class="pa-6"
         elevation="4"
+        height="100%"
         rounded
       >
-        <div class="d-flex justify-space-around mb-5">
+        <div class="d-flex justify-space-between mb-5">
           <h2
             v-if="item.quantity > 0"
             class="text-h5"
           >
             {{ item.name }}
+          </h2>
+          <h2
+            v-if="item.quantity > 0"
+            class="text-h5"
+          >
+            x{{ item.quantity }} owned
           </h2>
         </div>
 
@@ -25,7 +32,7 @@
             :class="item.quantity > 0 ? '' : 'shadow'"
             min-width="100px"
             max-width="100px"
-            :src="getBookImage(item)"
+            :src="useGetImage(item)"
           />
           <p v-if="item.quantity > 0">{{ item.description }}</p>
           <p v-else>???</p>
@@ -38,7 +45,8 @@
 <script setup>
 import { bookDirectory } from '@/composables/useItemList.js'
 import { loadData, saveData } from '@/composables/useLocalStorage.js'
-import { onMounted, watch } from 'vue'
+import { onMounted } from 'vue'
+import { useGetImage } from '@/composables/useImageRoute.js'
 
 onMounted(() => {
   const bookData = loadData('savedBooks')
@@ -47,12 +55,4 @@ onMounted(() => {
     bookDirectory.value = bookData
   }
 })
-
-watch(bookDirectory, (newValue) => {
-    saveData('savedBooks', newValue);
-  }, { deep: true });
-
-const getBookImage = ({path}) => {
-  return new URL(`../assets/items/book/${path}.png`, import.meta.url).href
-}
 </script>

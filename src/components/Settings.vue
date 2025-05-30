@@ -3,13 +3,16 @@
     v-model="isSettingsOpen"
     :model-value="isSettingsOpen"
     class="align-center justify-center"
+    opacity=".75"
     scrim="red"
   >
     <v-sheet
       class="pa-10"
+      color="blue-grey-darken-4"
+      max-width="650px"
     >
       <v-row>
-        <v-col align="end">
+        <v-col class="d-flex justify-end">
           <v-btn
             variant="tonal"
             color="grey"
@@ -21,17 +24,28 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col align="center">
-          <p class="text-red">
-            This will kill all your monsters and delete your game data.
+        <v-col
+          align="center"
+          class="text-body-1"
+        >
+          <h2 class="text-red text-h3 mb-5">
+            Woah, hold on!
+          </h2>
+          <p class="text-red text-h5 mb-3">
+            This will delete <strong>all</strong> your game data.
           </p>
-          <p class="mb-5 text-red">
-            Click the button twice to clear all your data.
+          <p class="mb-5 text-red text-h5">
+            Click the below button two times to clear all your data and start the game over from scratch.
+          </p>
+          <p class="text-h3 text-red mb-10">
+            This action is irreversible.
           </p>
           <v-btn
             :color="clearAllDataButtonState.color"
             size="x-large"
-            prepend-icon="mdi-alert-octagon-outline"
+            class="mb-5"
+            append-icon="mdi-skull"
+            prepend-icon="mdi-skull"
             @click="clearAllData"
           >
             {{ clearAllDataButtonState.text }}

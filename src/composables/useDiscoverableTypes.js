@@ -1,7 +1,8 @@
 export const DiscoverableTypes = {
-    BOOK: 'book',
-    CONSUMABLE: 'consumable',
-    EQUIPMENT: 'equipment',
     GEM: 'gem',
-    MONSTER: 'monster'
+    BOOK: 'book',
+    EQUIPMENT: 'equipment',
+    MONSTER: 'monster',
+    CONSUMABLE: 'consumable',
+    FRAGMENT: 'fragment',
 }

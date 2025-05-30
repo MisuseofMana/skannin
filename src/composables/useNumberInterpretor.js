@@ -1,19 +1,25 @@
-export const useRandomNumber = () => {
-    const min = 100000;
-    const max = 999999;
+import { bookDirectory, consumableDirectory, equipmentDirectory, fragmentDirectory } from "./useItemList";
+import { monsterDirectory } from "./useMonsterList";
+
+export const useRandomNumber = (min = 100000, max = 999999) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 export const useInterpretNumber = (number) => {
-    console.log('mod by primes')
+    const bookFreq = (number % 73) <= 5
+    const monsterFreq = (number % 53) <= 5
+    const equipmentFreq = (number % 31) <= 3
+    const consumableFreq = (number % 13) <= 3
+    const fragmentFreq = (number % 2) <= 2
 
-    const bookFreq = (number % 73) <= 2
-    const monsterFreq = (number % 53) <= 2
-    const equipmentFreq = (number % 31) <= 2
-    const consumableFreq = (number % 13) <= 2
-    const dustFreq = (number % 2) <= 2
+    const result = [ bookFreq, monsterFreq, equipmentFreq, consumableFreq, fragmentFreq ].indexOf(true)
+    const whatWasFound = [bookDirectory, monsterDirectory, equipmentDirectory, consumableDirectory, fragmentDirectory]
 
-    const results = [ bookFreq, monsterFreq, equipmentFreq, consumableFreq, dustFreq ]
+    const directory = whatWasFound[result].value
+    const payload = {
+        directory,
+        index: useRandomNumber(0, directory.length - 1),
+    }
 
-    console.log(results)
+    return payload
 }

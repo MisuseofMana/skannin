@@ -7,7 +7,6 @@
       <p class="text-red">
         {{ scanStatus }}
       </p>
-      <ScannerOutput :scanner-result="scannerResult" />
     </v-col>
     <v-col
       cols="12"
@@ -19,13 +18,8 @@
         v-if="!scannerReady"
         indeterminate
       />
-      <StreamBarcodeReader
-        no-front-cameras
-        @decode="onDecode"
-        @loaded="onLoaded"
-      />
     </v-col>
-  </v-row>    
+  </v-row>
 </template>
 
 <script setup>
@@ -34,10 +28,9 @@ import { StreamBarcodeReader } from '@teckel/vue-barcode-reader'
 import { loadData, saveData } from '@/composables/useLocalStorage.js'
 
 import { monsterDirectory } from '@/composables/useMonsterList.js'
-import { useRandomNumber, useInterpretNumber } from '@/composables/useNumberInterpretor.js'
+import { bookDirectory, consumableDirectory, equipmentDirectory, fragmentDirectory } from "@/composables/useItemList";
 
 const successfulScan = ref(false)
-const scannerResult = ref(null)
 const scannerReady = ref(false)
 const scanStatus = ref('')
 const priorScans = ref([])
@@ -61,6 +54,12 @@ const onLoaded = () => {
   scannerReady.value = true
 }
 
+const checkOffset = (index) => {
+  if (index === 0) return 'offset-2'
+  else if (index % 4 === 0) return 'offset-2'
+  return index === 0 || index % 4 === 0
+}
+
 const onDecode = (result) => {
   if (successfulScan.value === true) {
     console.log('scan already decoding')
@@ -71,40 +70,6 @@ const onDecode = (result) => {
     return
   }
   interpretScanResult(result)
-}
-
-const sumDigits = (number) => {
-  let sum = 0;
-  const numStr = Math.abs(number).toString(); // Convert to string and handle negative numbers
-
-  for (let i = 0; i < numStr.length; i++) {
-    sum += parseInt(numStr[i]); // Parse each digit and add to sum
-  }
-
-  return sum;
-}
-
-const interpretScanResult = (result = useRandomNumber()) => {
-
-	useInterpretNumber(result)
-  priorScans.value.push(result)
-  console.log('seed', seed.value)
-  console.log('result', result)
-  console.log('combined', result + seed.value)
-  let sum = sumDigits(result + seed.value)
-  console.log('sum', sum)
-
-
-  if (sum > monsterDirectory.value.length) {
-    sum = sum % monsterDirectory.value.length
-  }
-
-  if (monsterDirectory.value[sum].currentLevel < 3){
-    monsterDirectory.value[sum].currentLevel += 1
-  }
-
-  scannerResult.value = monsterDirectory.value[sum]
-  successfulScan.value = true
 }
 
 defineExpose({

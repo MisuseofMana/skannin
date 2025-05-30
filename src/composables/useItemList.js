@@ -1,17 +1,12 @@
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import { saveData } from './useLocalStorage.js'
 import { DiscoverableTypes as DT } from './useDiscoverableTypes'
-
-export const ItemTypes = {
-    CONSUMABLE: 'consumable', 
-    EQUIPMENT: 'equipment',
-    BOOK: 'book',
-    GEM: 'gem',
-}
 
 export const Stats = {
   ATTACK: 'attack',
   DEFENSE: 'defense',
-  HEALTH: 'health'
+  HEALTH: 'hp',
+  XP: 'xp'
 }
 
 export const bookDirectory = ref([
@@ -21,7 +16,7 @@ export const bookDirectory = ref([
       value: 1,
       name: "Armor Book",
       path: 'armor-book',
-      type: ItemTypes.CONSUMABLE,
+      type: DT.CONSUMABLE,
       description: 'A book that increases a monsters maximum defense by one.'
     },
     {
@@ -30,7 +25,7 @@ export const bookDirectory = ref([
       value: 1,
       name: "Attack Book",
       path: 'attack-book',
-      type: ItemTypes.CONSUMABLE,
+      type: DT.CONSUMABLE,
       description: 'A book that increases a monsters maximum attack by one.'
     },
     {
@@ -39,10 +34,14 @@ export const bookDirectory = ref([
       value: 1,
       name: "Health Book",
       path: 'attack-book',
-      type: ItemTypes.CONSUMABLE,
+      type: DT.CONSUMABLE,
       description: 'A book that increases a monsters maximum health by one.'
     },
 ])
+
+watch(bookDirectory, (newValue) => {
+  saveData('savedBooks', newValue);
+}, { deep: true });
 
 export const gemDirectory = ref([
     {
@@ -51,7 +50,7 @@ export const gemDirectory = ref([
       value: 1,
       name: "Air Gem",
       path: 'airgem',
-      type: ItemTypes.GEM,
+      type: DT.CONSUMABLE,
       description: 'An air element gem, can level up an air monster by one level.'
     },
     {
@@ -60,7 +59,7 @@ export const gemDirectory = ref([
       value: 1,
       name: "Earth Gem",
       path: 'earthgem',
-      type: ItemTypes.GEM,
+      type: DT.CONSUMABLE,
       description: 'An earth element gem, can level up an earth monster by one level.'
     },
     {
@@ -69,7 +68,7 @@ export const gemDirectory = ref([
       value: 1,
       name: "Fire Gem",
       path: 'firegem',
-      type: ItemTypes.GEM,
+      type: DT.CONSUMABLE,
       description: 'A fire element gem, can level up a fire monster by one level.'
     },
     {
@@ -78,47 +77,51 @@ export const gemDirectory = ref([
       value: 1,
       name: "Water Gem",
       path: 'watergem',
-      type: ItemTypes.GEM,
+      type: DT.CONSUMABLE,
       description: 'A water element gem, can level up a water monster by one level.'
     },
 ])
+
+watch(gemDirectory, (newValue) => {
+  saveData('savedGems', newValue);
+}, { deep: true });
 
 export const consumableDirectory = ref([
   {
     classification: DT.CONSUMABLE,
     quantity: 0,
-    value: 1,
+    value: 10,
     damage: 0,
-    buffStat: Stats.HEALTH,
+    buffStat: Stats.XP,
     debuffStat: null,
     name: "Banana",
     path: 'banana',
-    type: ItemTypes.CONSUMABLE,
-    description: 'A ripe banana with the sticker still intact, restores a monster health by one.'
+    type: DT.CONSUMABLE,
+    description: 'XP +10'
   },
   {
     classification: DT.CONSUMABLE,
     quantity: 0,
     value: 2,
     damage: 0,
-    stat: Stats.HEALTH,
+    buffStat: Stats.HEALTH,
     debuffStat: null,
     name: "Chocolate Cookie",
     path: 'cookie',
-    type: ItemTypes.CONSUMABLE,
-    description: 'A chocolate chip cookie, heals a monsters health by two.'
+    type: DT.CONSUMABLE,
+    description: 'HP +2'
   },
   {
     classification: DT.CONSUMABLE,
     quantity: 0,
     value: 3,
     damage: 0,
-    stat: Stats.HEALTH,
+    buffStat: Stats.HEALTH,
     debuffStat: null,
     name: "Sandwich",
     path: 'sandwich',
-    type: ItemTypes.CONSUMABLE,
-    description: 'A bologna sandwich, heals a monsters health by three.'
+    type: DT.CONSUMABLE,
+    description: 'HP +3'
   },
   {
     classification: DT.CONSUMABLE,
@@ -129,58 +132,63 @@ export const consumableDirectory = ref([
     debuffStat: null,
     name: "Burger",
     path: 'burger',
-    type: ItemTypes.CONSUMABLE,
-    description: 'A ripe banana with the sticker still intact, restores a monster health by three.'
+    type: DT.CONSUMABLE,
+    description: 'HP +3'
   },
   {
     classification: DT.CONSUMABLE,
     quantity: 0,
     value: 5,
     damage: 0,
-    stat: Stats.HEALTH,
+    buffStat: Stats.HEALTH,
     debuffStat: null,
     name: "Potion",
     path: 'potion',
-    type: ItemTypes.CONSUMABLE,
-    description: 'A magic potion, heals a monsters health by five.'
+    type: DT.CONSUMABLE,
+    description: 'HP +5'
   },
   {
     classification: DT.CONSUMABLE,
     quantity: 0,
     value: 6,
     damage: 0,
-    stat: Stats.HEALTH,
+    buffStat: Stats.HEALTH,
     debuffStat: null,
     name: "Radish",
     path: 'radish',
-    type: ItemTypes.CONSUMABLE,
-    description: 'A tangy radish, heals a monsters health by six.'
+    type: DT.CONSUMABLE,
+    description: 'HP +6'
   },
   {
     classification: DT.CONSUMABLE,
     quantity: 0,
-    value: 1,
-    damage: 1,
-    stat: Stats.ATTACK,
+    value: 10,
+    damage: 2,
+    buffStat: Stats.XP,
     debuffStat: Stats.HEALTH,
     name: "Cigarettes",
     path: 'cigarettes',
-    type: ItemTypes.CONSUMABLE,
-    description: 'A pack of lucky strikes longs, increases monsters atttack by one but reduce health by one.'
+    type: DT.CONSUMABLE,
+    description: 'XP +20, HP -2'
   },
-  {
-    classification: DT.CONSUMABLE,
-    quantity: 0,
-    value: 999,
-    damage: 0,
-    stat: null,
-    debuffStat: null,
-    name: "Monster Controller",
-    path: 'revive',
-    type: ItemTypes.CONSUMABLE,
-    description: 'Ancient technology from the early 2000s. Can rebuild a monsters essence, bringing it back from death.'
-  },
+  // {
+  //   classification: DT.CONSUMABLE,
+  //   quantity: 0,
+  //   value: 999,
+  //   damage: 0,
+  //   stat: null,
+  //   debuffStat: null,
+  //   name: "Monster Controller",
+  //   path: 'revive',
+  //   type: DT.CONSUMABLE,
+  //   description: 'Ancient technology from the early 2000s. Can rebuild a monsters essence, bringing it back from death.'
+  // },
 ])
+
+watch(consumableDirectory, (newValue) => {
+  console.log('saving consumable')
+  saveData('savedConsumables', newValue);
+}, { deep: true });
 
 export const equipmentDirectory = ref([
   {
@@ -192,8 +200,8 @@ export const equipmentDirectory = ref([
     debuffStat: null,
     name: "Amulet",
     path: 'amulet',
-    type: ItemTypes.EQUIPMENT,
-    description: 'Raises a monsters defense by one when equipped.'
+    type: DT.EQUIPMENT,
+    description: 'Def +1'
   },
   {
     classification: DT.EQUIPMENT,
@@ -204,8 +212,8 @@ export const equipmentDirectory = ref([
     debuffStat: null,
     name: "Socks",
     path: 'socks',
-    type: ItemTypes.EQUIPMENT,
-    description: 'Raises a monsters defense by one when equipped.'
+    type: DT.EQUIPMENT,
+    description: 'Def +1'
   },
   {
     classification: DT.EQUIPMENT,
@@ -216,8 +224,8 @@ export const equipmentDirectory = ref([
     debuffStat: null,
     name: "Amulet",
     path: 'beads',
-    type: ItemTypes.EQUIPMENT,
-    description: 'Raises a monsters defense by two when equipped.'
+    type: DT.EQUIPMENT,
+    description: 'Def +2'
   },
   {
     classification: DT.EQUIPMENT,
@@ -228,8 +236,8 @@ export const equipmentDirectory = ref([
     debuffStat: null,
     name: "Shield",
     path: 'shield',
-    type: ItemTypes.EQUIPMENT,
-    description: 'Raises a monsters defense by two when equipped.'
+    type: DT.EQUIPMENT,
+    description: 'Def +2'
   },
   {
     classification: DT.EQUIPMENT,
@@ -240,8 +248,8 @@ export const equipmentDirectory = ref([
     debuffStat: null,
     name: "Collar",
     path: 'collar',
-    type: ItemTypes.EQUIPMENT,
-    description: 'Raises a monsters defense by three when equipped.'
+    type: DT.EQUIPMENT,
+    description: 'Def +3'
   },
   {
     classification: DT.EQUIPMENT,
@@ -252,8 +260,8 @@ export const equipmentDirectory = ref([
     debuffStat: null,
     name: "Chainmail",
     path: 'chainmail',
-    type: ItemTypes.EQUIPMENT,
-    description: 'Raises a monsters defense by four when equipped.'
+    type: DT.EQUIPMENT,
+    description: 'Def +4'
   },
   {
     classification: DT.EQUIPMENT,
@@ -264,8 +272,8 @@ export const equipmentDirectory = ref([
     debuffStat: null,
     name: "Knife",
     path: 'knife',
-    type: ItemTypes.EQUIPMENT,
-    description: 'Raises a monsters attack by one when equipped.'
+    type: DT.EQUIPMENT,
+    description: 'Atk +1'
   },
   {
     classification: DT.EQUIPMENT,
@@ -276,8 +284,8 @@ export const equipmentDirectory = ref([
     debuffStat: null,
     name: "Knuckles",
     path: 'knuckles',
-    type: ItemTypes.EQUIPMENT,
-    description: 'Raises a monsters attack by two when equipped.'
+    type: DT.EQUIPMENT,
+    description: 'Atk +2'
   },
   {
     classification: DT.EQUIPMENT,
@@ -288,7 +296,27 @@ export const equipmentDirectory = ref([
     debuffStat: null,
     name: "Gun",
     path: 'gun',
-    type: ItemTypes.EQUIPMENT,
-    description: 'Raises a monsters attack by three when equipped.'
+    type: DT.EQUIPMENT,
+    description: 'Atk +3'
   },
 ])
+
+watch(equipmentDirectory, (newValue) => {
+  saveData('savedEquipment', newValue);
+}, { deep: true });
+
+export const fragmentDirectory = ref([
+  {
+    classification: DT.FRAGMENT,
+    quantity: 0,
+    value: 1,
+    name: "Fragment",
+    path: 'fragment',
+    type: DT.FRAGMENT,
+    description: 'A fragment'
+  }
+])
+
+watch(fragmentDirectory, (newValue) => {
+  saveData('savedFragments', newValue);
+}, { deep: true });

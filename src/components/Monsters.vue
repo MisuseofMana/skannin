@@ -1,58 +1,162 @@
 <template>
   <v-row>
     <v-col
-      v-for="(monster, index) in monsterDirectory"
+      v-for="monster in monsterDirectory"
       :key="monster.name"
       cols="12"
-      md="6"
+      md="10"
+      class="offset-md-1"
     >
       <v-sheet
         class="pa-6"
-        elevation="4"
+        elevation="0"
         rounded
+        color="blue-grey-darken-4"
       >
         <span>
-          <v-row class="d-flex justify-space-between">
+          <v-row v-if="monster.quantity > 0">
+            <v-col class="d-flex align-center">
+              <p class="text-h5 mr-5">XP: </p>
+              <v-progress-linear 
+                size="x-large"
+                height="20px"
+                rounded
+                max="50"
+                :model-value="monster.stats.xp"
+              />
+              <p class="text-h6 ml-5 text-no-wrap">{{ monster.stats.xp }} / 50 </p>
+            </v-col>
+          </v-row>
+          <v-row class="d-flex align-center justify-space-around">
             <v-col>
               <v-img
-                :class="monster.currentLevel > 0 ? '' : 'shadow'"
+                :class="[
+                  monster.quantity > 0 ? 'mb-4' : 'shadow',
+                  monster.stats.hp <= 0 ? 'dead' : ''
+                ]"
                 min-width="200px"
-                :src="getMonsterImage(monster)"
+                :src="useGetImage(monster)"
               />
             </v-col>
             <v-col>
-              <p v-if="monster.currentLevel > 0">{{ monster.specialInfo }}</p>
-              <p v-else>???</p>
+              <div v-if="monster.quantity > 0">
+                <h2 class="text-h4 mb-3">{{ monster.name }}</h2>
+                <h2 class="text-h6 mb-3">Level {{ monster.quantity }}</h2>
+                <p v-if="monster.stats.hp <= 0">
+                  This one looks like it's dead.
+                </p>
+                <p
+                  v-else
+                  class="text-body-1 mr-5 mb-4"
+                >{{ monster.specialInfo }}</p>
+                <div class="d-flex">
+                  <v-menu location="bottom">
+                    <template #activator="{ props }">
+                      <v-btn
+                        v-bind="props"
+                        variant="tonal"
+                        :disabled="onlyAvailableEquipment.length <= 0"
+                        class="mr-5"
+                      >
+                        Equip
+                      </v-btn>
+                    </template>
+
+
+                    <v-list>
+                      <v-list-item
+                        v-for="(piece, index) in onlyAvailableEquipment"
+                        :key="index"
+                        :value="piece"
+                        @click="useEquipment(piece, monster)"
+                      >
+                        <div class="d-flex">
+                          <v-img
+                            width="50px"
+                            :src="useGetImage(piece)"
+                          />
+                          <div>
+                            <v-list-item-title class="text-h6">{{ piece.name }} <span class="text-blue">{{ piece.description }}</span></v-list-item-title>
+                            <v-list-item-subtitle class="text-body-1">x{{ piece.quantity }}</v-list-item-subtitle>
+                          </div>
+                        </div>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
+                  <div class="text-center">
+                    <v-menu location="bottom">
+                      <template #activator="{ props }">
+                        <v-btn
+                          v-bind="props"
+                          variant="tonal"
+                          :disabled="onlyAvailableEquipment.length <= 0"
+                        >
+                          Item
+                        </v-btn>
+                      </template>
+
+                      <v-list>
+                        <v-list-item
+                          v-for="(item, index) in onlyAvailableItems"
+                          :key="index"
+                          :value="item"
+                          @click="useItem(item, monster)"
+                        >
+                          <div class="d-flex">
+                            <v-img
+                              width="50px"
+                              :src="useGetImage(item)"
+                            />
+                            <div>
+                              <v-list-item-title class="text-h6">{{ item.name }} <span class="text-blue">{{ item.description }}</span></v-list-item-title>
+                              <v-list-item-subtitle class="text-body-1">x{{ item.quantity }}</v-list-item-subtitle>
+                            </div>
+                          </div>
+                        </v-list-item>
+                      </v-list>
+                    </v-menu>
+                  </div>
+                </div>
+              </div>
+              <p
+                v-else
+                class="text-center text-h2"
+              >???</p>
             </v-col>
           </v-row>
         
-          <div v-if="monster.currentLevel > 0">
-            <div class="d-flex align-center mb-2">
-              <p class="text-body mr-2 text-no-wrap"> {{ monster.stats.hp }} / 9</p>
-              <v-progress-linear
-                v-model="monster.stats.hp"
-                height="20"
-                rounded
-                color="green-lighten-2"
-              />
-            </div>
-            <div class="d-flex align-center mb-2">
-              <p class="text-body mr-2 text-no-wrap"> {{ monster.stats.attack }}</p>
-              <v-progress-linear
-                v-model="monster.stats.attack"
-                height="20"
-                rounded
-                color="red-lighten-2"
-              />
-            </div>
-            <div class="d-flex align-center mb-2">
-              <p class="text-body mr-2 text-no-wrap"> {{ monster.stats.defense }}</p>
-              <v-progress-linear
-                v-model="monster.stats.defense"
-                height="20"
-                rounded
-                color="blue-lighten-2"
-              />
+          <div
+            v-if="monster.quantity > 0"
+            class="mt-2"
+          >
+            <div class="d-flex align-center justify-space-around">
+              <div class="mb-2 text-center text-body-1">
+                <div v-if="monster.equipment">
+                  <v-img
+                    min-width="100px"
+                    max-width="100px"
+                    :src="useGetImage(monster.equipment)"
+                  />
+                  <p>{{ monster.equipment.name }}</p>
+                  <p
+                    class="text-body-2"
+                    style="max-width:100px;"
+                  >{{ monster.equipment.description }}</p>
+                </div>
+                <p v-else>Nothing Equipped</p>
+              </div>
+              <div class="mb-2 text-center">
+                <p class="text-h5 text-green mb-2">HP</p>
+                <p class="text-h5">{{ monster.stats.hp }} / {{ monster.stats.maxhp }}</p>
+              </div>
+              <div class="mb-2 text-center">
+                <p class="text-h5 text-red mb-2">ATK</p>
+                <p class="text-h5">{{ monster.stats.attack }} / {{ monster.stats.maxattack }}</p>
+              </div>
+              <div class="mb-2 text-center">
+                <p class="text-h5 text-blue mb-2">DEF</p>
+                <p class="text-h5">{{ monster.stats.defense }} / {{ monster.stats.maxdefense }}</p>
+              </div>
             </div>
           </div>
         </span>
@@ -62,24 +166,93 @@
 </template>
 
 <script setup>
+import { ref, computed } from 'vue'
 import { monsterDirectory } from '@/composables/useMonsterList.js'
-import { loadData, saveData } from '@/composables/useLocalStorage.js'
-import { onMounted, watch } from 'vue'
+import { equipmentDirectory, consumableDirectory } from '@/composables/useItemList.js'
+import { loadData } from '@/composables/useLocalStorage.js'
+import { onMounted } from 'vue'
+import { useGetImage } from '@/composables/useImageRoute.js'
+import { sortByQuantity } from '@/composables/useSorting.js'
 
-onMounted(() => {
-  const monsterData = loadData('savedMonsters')
-
-  if (monsterData) {
-    monsterDirectory.value = monsterData
-  }
+const onlyAvailableEquipment = computed(() => {
+  return equipmentDirectory.value.filter((piece) => {
+    return piece.quantity > 0
+  })
 })
 
-watch(monsterDirectory, (newValue) => {
-    saveData('savedMonsters', newValue);
-  }, { deep: true });
+const onlyAvailableItems = computed(() => {
+  return consumableDirectory.value.filter((item) => {
+    return item.quantity > 0
+  })
+})
 
-const getMonsterImage = ({type, name}) => {
-  return new URL(`../assets/monsters/${type}/${name}.png`, import.meta.url).href
+const getMonster = (monster) => {
+  return monsterDirectory.value.find(m => m.name == monster.name)
 }
 
+const getItem = (which) => {
+  return consumableDirectory.value.find(i => i.name == which.name)
+}
+
+const getEquipment = (which) => {
+  return equipmentDirectory.value.find(e => e.name == which.name)
+}
+
+
+const useItem = (item, monster) => {
+  const targetMonster = getMonster(monster)
+  const targetItem = getItem(item)
+  targetItem.quantity -= 1
+
+  if (targetItem.buffStat) targetMonster.stats[targetItem.buffStat] += targetItem.value
+  if (targetItem.debuffStat) targetMonster.stats[targetItem.debuffStat] -= targetItem.damage
+
+  if (targetMonster.stats.xp >= 40) {
+    targetMonster.quantity += 1
+    targetMonster.stats.maxhp += 2
+    targetMonster.stats.maxattack += 1
+    targetMonster.stats.maxdefense += 1
+  }
+}
+
+const useEquipment = (equipment, monster) => {
+  const targetMonster = getMonster(monster)
+
+  if (targetMonster.equipment) {
+    const returnEquipment = getEquipment(targetMonster.equipment)
+
+    if (returnEquipment.buffStat) { 
+      targetMonster.stats[returnEquipment.buffStat] -= returnEquipment.value
+      targetMonster.stats[`max${returnEquipment.buffStat}`] -= returnEquipment.value
+    }
+    if (returnEquipment.debuffStat) {
+      targetMonster.stats[returnEquipment.debuffStat] += returnEquipment.damage
+      targetMonster.stats[`max${returnEquipment.debuffStat}`] += returnEquipment.damage
+    }
+
+    returnEquipment.quantity += 1
+  }
+
+  const targetEquipment = getEquipment(equipment)
+  targetEquipment.quantity -= 1
+
+  if (targetEquipment.buffStat) { 
+      targetMonster.stats[targetEquipment.buffStat] += targetEquipment.value
+      targetMonster.stats[`max${targetEquipment.buffStat}`] += targetEquipment.value
+    }
+    if (targetEquipment.debuffStat) {
+      targetMonster.stats[targetEquipment.debuffStat] -= targetEquipment.damage
+      targetMonster.stats[`max${targetEquipment.debuffStat}`] -= targetEquipment.damage
+    }
+
+  targetMonster.equipment = targetEquipment
+}
+
+const overlay = ref(true)
+onMounted(() => {
+  const monsterData = loadData('savedMonsters')
+  if (monsterData) {
+    monsterDirectory.value = sortByQuantity(monsterData)
+  }
+})
 </script>

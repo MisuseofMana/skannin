@@ -3,19 +3,21 @@
     max-width="900px"
     class="pa-10"
   >
-    <!-- try this one instead -->
-    <!-- https://www.npmjs.com/package/@teckel/vue-barcode-reader -->
-    <v-btn
-      v-if="debugMode"
-      size="large"
-      color="amber-accent-4"
-      class="mb-5"
-      @click="scannerComponent.interpretScanResult()"
+    <WelcomeCard
+      v-if="!startedGame"
+      @bypass-start="startedGame = true"
+    />
+      
+    <v-card
+      v-else
+      class="pa-10"
     >
-      Simulate Scanner Generation
-    </v-btn>
-
-    <v-card>
+      <Fragments />
+      <ScannerOutput
+        v-if="scannerResult !== null"
+        :scanner-result="scannerResult"
+        @clear-scan-result="scannerResult = null"
+      />
       <v-tabs
         v-model="activeTab"
         :items="tabsList"
@@ -38,15 +40,11 @@
             :value="item.value"
             class="pa-4"
           >
-            <ScannerInterface
-              v-if="item.value == 'scanner'"
-              ref="scannerRef"
-            />
-            <Monsters v-if="item.value === 'monsters'" />
-            <Consumables v-if="item.value === 'consumable'" />
-            <Equipment v-if="item.value === 'equipment'" />
-            <Books v-if="item.value === 'books'" />
-            <Gems v-if="item.value === 'gems'" />
+            <Battle v-show="item.value === 'battle'" />
+            <Monsters v-show="item.value === 'monsters'" />
+            <Consumables v-show="item.value === 'consumable'" />
+            <Equipment v-show="item.value === 'equipment'" />
+            <!-- <Books v-show="item.value === 'books'" /> -->
           </v-tabs-window-item>
         </template>
       </v-tabs>
@@ -55,26 +53,21 @@
 </template>
 
 <script setup>
-import { useMagicKeys, whenever} from '@vueuse/core'
 import {ref, computed, onMounted, watch, useTemplateRef} from 'vue'
-const scannerComponent = useTemplateRef('scannerRef')
-
+import { useRandomNumber, useInterpretNumber } from '@/composables/useNumberInterpretor.js'
 import { monsterDirectory } from '@/composables/useMonsterList.js'
-const keys = useMagicKeys()
+import { loadData, saveData } from '@/composables/useLocalStorage.js'
 
-const shiftSpace = keys['Shift+space']
-const debugMode = ref(true)
+const startedGame = ref(false)
 
-watch(shiftSpace, (v) => {
-  if (v)
-  debugMode.value = !debugMode.value  
-})
+const scannerComponent = useTemplateRef('scannerRef')
+const scannerResult = ref(null)
 
 const tabsList = ref([
   {
-    icon: 'mdi-barcode-scan',
-    text: 'Scanner',
-    value: 'scanner'
+    icon: 'mdi-sword-cross',
+    text: 'Battle',
+    value: 'battle'
   },
   {
     icon: 'mdi-emoticon-devil',
@@ -91,23 +84,20 @@ const tabsList = ref([
     text: 'Equipment',
     value: 'equipment',
   },
-  {
-    icon: 'mdi-book',
-    text: 'Books',
-    value: 'books',
-  },
-  {
-    icon: 'mdi-diamond-stone',
-    text: 'Gems',
-    value: 'gems',
-  },
+  // {
+  //   icon: 'mdi-book',
+  //   text: 'Books',
+  //   value: 'books',
+  // },
 ])
 const activeTab = ref('scanner')
 
 const decodedText = ref('')
 
-const getMonsterImage = ({type, name}) => {
-  return new URL(`../assets/monsters/${type}/${name}.png`, import.meta.url).href
+const interpretScanResult = (result = useRandomNumber()) => {
+	const {directory, index} = useInterpretNumber(result)
+	directory[index].quantity += 1
+  scannerResult.value = directory[index]
 }
 
 </script>

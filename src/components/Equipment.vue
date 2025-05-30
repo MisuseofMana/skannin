@@ -4,20 +4,26 @@
       v-for="(item, index) in equipmentDirectory"
       :key="item.name"
       cols="12"
-      md="4"
+      md="6"
     >
       <v-sheet
         class="pa-6"
         elevation="4"
+        height="100%"
         rounded
       >
         <div class="d-flex justify-space-between mb-5">
           <h2
             v-if="item.quantity > 0"
             class="text-h5"
-            :class="item.quantity <= 0 "
           >
-            {{ item.name }} - {{ item.quantity }} owned
+            {{ item.name }}
+          </h2>
+          <h2
+            v-if="item.quantity > 0"
+            class="text-h5"
+          >
+            x{{ item.quantity }} owned
           </h2>
         </div>
 
@@ -26,7 +32,7 @@
             :class="item.quantity > 0 ? '' : 'shadow'"
             min-width="100px"
             max-width="100px"
-            :src="getEquipmentImage(item)"
+            :src="useGetImage(item)"
           />
           <p v-if="item.quantity > 0">{{ item.description }}</p>
           <p v-else>???</p>
@@ -39,22 +45,16 @@
 <script setup>
 import { equipmentDirectory } from '@/composables/useItemList.js'
 import { loadData, saveData } from '@/composables/useLocalStorage.js'
-import { onMounted, watch } from 'vue'
+import { onMounted } from 'vue'
+import { useGetImage } from '@/composables/useImageRoute.js'
+import { sortByQuantity } from '@/composables/useSorting.js'
 
 onMounted(() => {
   const savedEquipment = loadData('savedEquipment')
 
   if (savedEquipment) {
-    equipmentDirectory.value = savedEquipment
+    equipmentDirectory.value = sortByQuantity(savedEquipment)
   }
 })
-
-watch(equipmentDirectory, (newValue) => {
-    saveData('savedEquipment', newValue);
-  }, { deep: true });
-
-const getEquipmentImage = ({path}) => {
-  return new URL(`../assets/items/equipment/${path}.png`, import.meta.url).href
-}
 
 </script>

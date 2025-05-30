@@ -1,3 +1,8 @@
 .shadow {
     filter: brightness(0%) blur(0.7rem);
 }
+
+.dead {
+    filter: brightness(50%) blur(0.2rem) sepia() saturate(0.2);
+    transform: rotate(180deg);
+}

@@ -1,22 +1,29 @@
 <template>
   <v-row>
     <v-col
-      v-for="(item, index) in consumableDirectory"
+      v-for="(item) in consumableDirectory"
       :key="item.name"
       cols="12"
-      md="4"
+      md="6"
     >
       <v-sheet
         class="pa-6"
         elevation="4"
+        height="100%"
         rounded
       >
-        <div class="d-flex justify-space-around mb-5">
+        <div class="d-flex justify-space-between mb-5">
           <h2
             v-if="item.quantity > 0"
             class="text-h5"
           >
             {{ item.name }}
+          </h2>
+          <h2
+            v-if="item.quantity > 0"
+            class="text-h5"
+          >
+            x{{ item.quantity }} owned
           </h2>
         </div>
 
@@ -25,7 +32,7 @@
             :class="item.quantity > 0 ? '' : 'shadow'"
             min-width="100px"
             max-width="100px"
-            :src="getConsumableImage(item)"
+            :src="useGetImage(item)"
           />
           <p v-if="item.quantity > 0">{{ item.description }}</p>
           <p v-else>???</p>
@@ -38,21 +45,16 @@
 <script setup>
 import { consumableDirectory } from '@/composables/useItemList.js'
 import { loadData, saveData } from '@/composables/useLocalStorage.js'
-import { onMounted, watch } from 'vue'
+import { onMounted } from 'vue'
+import { useGetImage } from '@/composables/useImageRoute.js'
+import { sortByQuantity } from '@/composables/useSorting.js'
 
 onMounted(() => {
   const savedConsumables = loadData('savedConsumables')
 
   if (savedConsumables) {
-    consumableDirectory.value = savedConsumables
+    consumableDirectory.value = sortByQuantity(savedConsumables)
   }
 })
 
-watch(consumableDirectory, (newValue) => {
-    saveData('savedConsumables', newValue);
-  }, { deep: true });
-
-const getConsumableImage = ({path}) => {
-  return new URL(`../assets/items/consumable/${path}.png`, import.meta.url).href
-}
 </script>

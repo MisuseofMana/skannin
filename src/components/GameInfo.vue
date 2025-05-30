@@ -3,14 +3,16 @@
     v-model="isModalOpen"
     :model-value="isModalOpen"
     class="align-center justify-center"
-    scrim="info"
+    opacity=".75"
+    scrim="blue-grey-darken-4"
   >
     <v-sheet
       max-width="600px"
       class="pa-10"
+      color="blue-grey-darken-4"
     >
       <v-row>
-        <v-col align="end">
+        <v-col class="d-flex justify-end">
           <v-btn
             variant="tonal"
             color="grey"
@@ -36,9 +38,10 @@
             How To Play
           </h2>
           <p class="text-body-1 mb-2">
-            Use a phone to access this website and allow camera access. Use the scanner tab to scan barcodes to discover different monsters, items, and equipment.
+            Against the old man's advice, make your freaky little monster pets participate in blood sport death matches. Try your best to care for them, win fragments in the deathmatches and spend them on bits, baubels, and better gear to equip so you can become the ultimate monster fighter.
           </p>
-          <p class="text-body-1 mb-5">
+          <p>"Gotta get most of em!" just like in that popular japanese pocket monster game about cockfighting."</p>
+          <!-- <p class="text-body-1 mb-5">
             Equip your monsters with gear, feed them junkfood and level them up by scanning more barcodes.
           </p>
           <h2 class="text-h4 mb-2">
@@ -46,7 +49,7 @@
           </h2>
           <p class="text-body-1">
             Coming soon you'll be able to play with friends and pit your monsters against one another in 1v1 mortal combat.
-          </p>
+          </p> -->
         </v-col>
       </v-row>
     </v-sheet>
