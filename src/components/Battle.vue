@@ -1,5 +1,21 @@
 <template>
-  <v-row class="my-15">
+  <v-row class="my-5">
+    <v-col
+      v-if="scene != 'menu'"
+      cols="12"
+    >
+      <v-btn
+        size="x-large"
+        width="100%"
+        class="mb-5"
+        color="teal-darken-1"
+        prepend-icon="mdi-arrow-left"
+        text="Back To Menu"
+        @click="showScene('nursery')"
+      >
+        Back to Menu
+      </v-btn>
+    </v-col>
     <v-spacer />
     <v-col
       v-if="scene === 'menu'"
@@ -13,7 +29,7 @@
         color="amber-darken-1"
         prepend-icon="mdi-cart-outline"
         text="Shop"
-        @click="animateToShop"
+        @click="showScene('shop')"
       />
       <v-btn
         size="x-large"
@@ -22,7 +38,7 @@
         color="teal-darken-1"
         prepend-icon="mdi-mother-nurse"
         text="Nursery"
-        @click="showNursery"
+        @click="showScene('nursery')"
       />
       <v-btn
         size="x-large"
@@ -31,19 +47,7 @@
         color="red-darken-1"
         prepend-icon="mdi-sword-cross"
         text="Blood Sports"
-        @click="showBloodSport"
-      />
-    </v-col>
-
-    <v-col
-      v-if="scene === 'shop'"
-      cols="12"
-      md="6"
-    >
-      <v-img 
-        aspect-ratio="2/1"
-        max-width="400"
-        src="`../assets/shop/2.png`"
+        @click="showScene('bloodsport')"
       />
     </v-col>
     <v-spacer />
@@ -56,30 +60,25 @@ import { animate } from 'animejs';
 
 const scene = ref('menu')
 
-const animateToShop = () => {
+const scaleOut = {
+  scale: [1, 0],
+  opacity: [1, 0],
+  duration: 450,
+}
+
+const scaleIn = {
+  scale: [0, 1],
+  opacity: [0, 1],
+  duration: 450,
+}
+
+const showScene = (sceneString) => {
   animate('.v-window__container', {
-      scale: [1, 0],
-      opacity: [1, 0],
-      duration: 450,
-      onComplete: () => showShop()
+    ...scaleOut,
+    onComplete: () => {
+      scene.value = sceneString
+      animate('.v-window__container', scaleIn)
+    }
   }) 
-}
-
-const showShop = () => {
-  scene.value = 'shop'
-  animate('.v-window__container', {
-        scale: [0, 1],
-        opacity: [0, 1],
-        duration: 450,
-        onComplete: () => console.log('hi')
-    }) 
-}
-
-const showNursery = () => {
-    console.log('to next scene')
-}
-
-const showBloodSport = () => {
-    console.log('to next scene')
 }
 </script>

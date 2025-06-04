@@ -7,47 +7,21 @@
       v-if="!startedGame"
       @bypass-start="startedGame = true"
     />
-      
     <v-card
       v-else
       class="pa-10"
     >
       <Fragments />
-      <ScannerOutput
-        v-if="scannerResult !== null"
-        :scanner-result="scannerResult"
-        @clear-scan-result="scannerResult = null"
-      />
-      <v-tabs
-        v-model="activeTab"
-        :items="tabsList"
-        align-tabs="center"
-        bg-color="grey-darken-4"
-        slider-color="secondary"
-        stacked
-      >
-        <template #tab="{ item }">
-          <v-tab
-            :prepend-icon="item.icon"
-            :text="item.text"
-            :value="item.value"
-            class="text-none"
-          />
-        </template>
 
-        <template #item="{ item }">
-          <v-tabs-window-item
-            :value="item.value"
-            class="pa-4"
-          >
-            <Battle v-show="item.value === 'battle'" />
-            <Monsters v-show="item.value === 'monsters'" />
-            <Consumables v-show="item.value === 'consumable'" />
-            <Equipment v-show="item.value === 'equipment'" />
-            <!-- <Books v-show="item.value === 'books'" /> -->
-          </v-tabs-window-item>
-        </template>
-      </v-tabs>
+      <MenuButtons />
+
+      <Battle v-show="currentScene === 'battle'" />
+      <Shop v-show="currentScene === 'shop'" />
+      <Nursery v-show="currentScene === 'nursery'" />
+      <BloodSport v-show="currentScene === 'bloodsport'" />
+      <Monsters v-show="currentScene === 'monsters'" />
+      <Consumables v-show="currentScene === 'consumable'" />
+      <Equipment v-show="currentScene === 'equipment'" />
     </v-card>
   </v-container>
 </template>
@@ -60,36 +34,9 @@ import { loadData, saveData } from '@/composables/useLocalStorage.js'
 
 const startedGame = ref(false)
 
+const currentScene = ref('')
 const scannerComponent = useTemplateRef('scannerRef')
 const scannerResult = ref(null)
-
-const tabsList = ref([
-  {
-    icon: 'mdi-sword-cross',
-    text: 'Battle',
-    value: 'battle'
-  },
-  {
-    icon: 'mdi-emoticon-devil',
-    text: 'Monsters',
-    value: 'monsters',
-  },
-  {
-    icon: 'mdi-food-drumstick',
-    text: 'Consumable',
-    value: 'consumable',
-  },
-  {
-    icon: 'mdi-sword',
-    text: 'Equipment',
-    value: 'equipment',
-  },
-  // {
-  //   icon: 'mdi-book',
-  //   text: 'Books',
-  //   value: 'books',
-  // },
-])
 const activeTab = ref('scanner')
 
 const decodedText = ref('')

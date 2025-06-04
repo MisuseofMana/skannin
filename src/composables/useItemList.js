@@ -106,7 +106,7 @@ export const consumableDirectory = ref([
     damage: 0,
     buffStat: Stats.HEALTH,
     debuffStat: null,
-    name: "Chocolate Cookie",
+    name: "Cookie",
     path: 'cookie',
     type: DT.CONSUMABLE,
     description: 'HP +2'
