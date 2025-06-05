@@ -1,20 +1,19 @@
 <template>
   <div>
-    <h2 class="text-h4 mb-5">
-      Blood Sport
-    </h2>
+    <div class="d-flex my-4 justify-center text-red">
+      <v-icon
+        size="35"
+        class="mr-2"
+      >
+        mdi-sword
+      </v-icon>
+      <h2 class="text-h4 mb-5">
+        Bloodsport
+      </h2>
+    </div>
     <v-img 
-      aspect-ratio="2/1"
-      max-width="400"
+      min-width="325"
       src="`../assets/bloodsport/1.png`"
     />
   </div>
 </template>
-
-<script setup>
-
-</script>
-
-<style lang="scss" scoped>
-
-</style>

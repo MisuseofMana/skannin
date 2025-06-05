@@ -1,7 +1,7 @@
 <template>
   <v-row class="my-5">
     <v-col
-      v-if="scene != 'menu'"
+      v-if="scene != 'menu'"  
       cols="12"
     >
       <v-btn

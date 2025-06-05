@@ -1,5 +1,5 @@
 <template>
-  <v-row>
+  <v-row class="mt-4">
     <v-col
       v-for="monster in monsterDirectory"
       :key="monster.name"
@@ -14,24 +14,11 @@
         color="blue-grey-darken-4"
       >
         <span>
-          <v-row v-if="monster.quantity > 0">
-            <v-col class="d-flex align-center">
-              <p class="text-h5 mr-5">XP: </p>
-              <v-progress-linear 
-                size="x-large"
-                height="20px"
-                rounded
-                max="50"
-                :model-value="monster.stats.xp"
-              />
-              <p class="text-h6 ml-5 text-no-wrap">{{ monster.stats.xp }} / 50 </p>
-            </v-col>
-          </v-row>
           <v-row class="d-flex align-center justify-space-around">
             <v-col>
               <v-img
                 :class="[
-                  monster.quantity > 0 ? 'mb-4' : 'shadow',
+                  monster.quantity > 0 ? '' : 'shadow',
                   monster.stats.hp <= 0 ? 'dead' : ''
                 ]"
                 min-width="200px"
@@ -40,8 +27,19 @@
             </v-col>
             <v-col>
               <div v-if="monster.quantity > 0">
-                <h2 class="text-h4 mb-3">{{ monster.name }}</h2>
-                <h2 class="text-h6 mb-3">Level {{ monster.quantity }}</h2>
+                <h2 class="text-h4">{{ monster.name }}</h2>
+                <h2 class="text-h6 mb-3">Lvl {{ monster.quantity }}</h2>
+                <div class="d-flex align-center mb-2">
+                  <p class="text-h6 mr-2">XP: </p>
+                  <v-progress-linear 
+                    size="x-large"
+                    height="20px"
+                    rounded
+                    max="50"
+                    :model-value="monster.stats.xp"
+                  />
+                  <p class="text-h6 ml-2 text-no-wrap">{{ monster.stats.xp }} / {{ calculatedXPGoal(monster.quantity) }} </p>
+                </div>
                 <p v-if="monster.stats.hp <= 0">
                   This one looks like it's dead.
                 </p>
@@ -55,6 +53,7 @@
                       <v-btn
                         v-bind="props"
                         variant="tonal"
+                        size="x-large"
                         :disabled="onlyAvailableEquipment.length <= 0"
                         class="mr-5"
                       >
@@ -72,7 +71,8 @@
                       >
                         <div class="d-flex">
                           <v-img
-                            width="50px"
+                            max-width="50px"
+                            min-width="50px"
                             :src="useGetImage(piece)"
                           />
                           <div>
@@ -89,6 +89,7 @@
                         <v-btn
                           v-bind="props"
                           variant="tonal"
+                          size="x-large"
                           :disabled="onlyAvailableEquipment.length <= 0"
                         >
                           Item
@@ -104,7 +105,8 @@
                         >
                           <div class="d-flex">
                             <v-img
-                              width="50px"
+                              max-width="50px"
+                              min-width="50px"
                               :src="useGetImage(item)"
                             />
                             <div>
@@ -196,6 +198,10 @@ const getItem = (which) => {
 
 const getEquipment = (which) => {
   return equipmentDirectory.value.find(e => e.name == which.name)
+}
+
+const calculatedXPGoal = (monsterLevel) => {
+  return Math.ceil(monsterLevel**3 + 1.15)
 }
 
 

@@ -6,8 +6,6 @@
     <v-col
       v-for="(item) in fragmentDirectory"
       :key="item.name"
-      cols="6"
-      md="3"
     >
       <v-sheet
         class="pa-6 d-flex align-center justify-center"
