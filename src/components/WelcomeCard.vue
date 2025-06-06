@@ -3,75 +3,25 @@
     <div class="d-flex justify-center mb-3">
       <v-img 
         aspect-ratio="2/1"
-        max-width="400"
-        src="`../assets/intro/1.png`"
+        max-width="325"
+        min-width="325"
+        :src="useEventImage({folderName: 'intro', fileName: sceneScript[sceneNumber].imagePath})"
       />
     </div>
     <p class="mb-10">
-      What? Who are you?
+      {{ sceneScript[sceneNumber].text }}
     </p>
-    <div class="d-flex justify-center mb-3">
-      <v-img 
-        aspect-ratio="2/1"
-        max-width="400"
-        src="`../assets/intro/2.png`"
-      />
-    </div>
-    <p class="mb-10">
-      How'd you even get into my lab, kiddo?
-    </p>
-    <div class="d-flex justify-center mb-3">
-      <v-img 
-        aspect-ratio="2/1"
-        max-width="400"
-        src="`../assets/intro/3.png`"
-      />
-    </div>
-    <p class="mb-10">
-      No matter, since you're here you can take this off my hands.
-    </p>
-    <div class="d-flex justify-center mb-3">
-      <v-img 
-        aspect-ratio="2/1"
-        max-width="400"
-        src="`../assets/intro/5.png`"
-      />
-    </div>
-    <p class="mb-10">
-      Look it's hatching.
-    </p>
-    <div class="d-flex justify-center mb-3">
-      <v-img 
-        aspect-ratio="2/1"
-        max-width="400"
-        src="`../assets/intro/4.png`"
-      />
-    </div>
-    <p class="mb-10">
-      Keep 'em safe now, understand?
-    </p>
-    <div class="d-flex justify-center mb-3">
-      <v-img 
-        aspect-ratio="2/1"
-        max-width="400"
-        src="`../assets/intro/6.png`"
-      />
-    </div>
-    <p class="mb-10">
-      If they kick the bucket, that's on you alright?
-    </p>
-    <div class="d-flex justify-center mb-3">
-      <v-img 
-        aspect-ratio="2/1"
-        max-width="400"
-        src="`../assets/intro/2.png`"
-      />
-    </div>
-    <p class="mb-15">
-      And DON'T USE THE LIL THING FOR BLOOD SPORTS, OKAY?!
-    </p>
+    <v-btn
+      v-if="sceneNumber < sceneScript.length - 1"
+      size="x-large"
+      elevation="0"
+      color="primary"
+      :text="sceneScript[sceneNumber].response"
+      @click="advanceScene()"
+    />
 
     <v-sheet
+      v-if="sceneNumber == sceneScript.length - 1"
       color="blue-grey-darken-4"
       class="pa-5 mb-10"
     >
@@ -88,18 +38,13 @@
           :src="useGetImage(monsterPicked)"
         />
       </div>
-    </v-sheet>
 
-    <v-sheet
-      color="blue-grey-darken-4"
-      class="pa-5 mb-10"
-    >
       <p class="mb-5">
-        he gave you some starting items and fragments too!
+        and some starting items and fragments too!
       </p>
-      <div class="d-flex justify-center mb-10">
-        <div class="d-flex flex-column">
-          <p class="text-h4">
+      <div class="mb-10">
+        <div class="d-flex flex-column justify-center align-center">
+          <p class="text-h4 text-center">
             {{ itemPicked.name }}
           </p>
           <v-img 
@@ -109,8 +54,8 @@
             :src="useGetImage(itemPicked)"
           />
         </div>
-        <div class="d-flex flex-column">
-          <p class="text-h4">
+        <div class="d-flex flex-column justify-center align-center">
+          <p class="text-h4 text-center">
             {{ equipPicked.name }}
           </p>
           <v-img 
@@ -120,8 +65,8 @@
             :src="useGetImage(equipPicked)"
           />
         </div>
-        <div class="d-flex flex-column">
-          <p class="text-h4">
+        <div class="d-flex flex-column justify-center align-center">
+          <p class="text-h4 text-center">
             {{ equipPicked2.name }}
           </p>
           <v-img 
@@ -132,12 +77,7 @@
           />
         </div>
       </div>
-    </v-sheet>
 
-    <v-sheet
-      color="blue-grey-darken-4"
-      class="pa-5 mb-10"
-    >
       <div class="d-flex flex-column justify-space-around align-center">
         <p class="text-h4">
           Fragments x20
@@ -151,7 +91,10 @@
       </div>
     </v-sheet>
 
-    <div class="d-flex justify-space-around">
+    <div
+      v-if="sceneNumber == sceneScript.length - 1"
+      class="d-flex justify-space-around"
+    >
       <v-btn
         size="x-large"
         color="teal"
@@ -170,13 +113,91 @@ import { consumableDirectory, equipmentDirectory, fragmentDirectory } from '@/co
 import { useRandomNumber } from '@/composables/useNumberInterpretor.js'
 import { loadData, saveData } from '@/composables/useLocalStorage.js'
 
-import { useGetImage } from '@/composables/useImageRoute.js'
+import { Howl } from 'howler'
+import audio from '../assets/intro/audio.wav'
+import { useGetImage, useEventImage } from '@/composables/useImageRoute.js'
 
 const monsterPicked = ref({})
 const itemPicked = ref({})
 const equipPicked = ref({})
 const equipPicked2 = ref({})
 const emit = defineEmits(['bypassStart'])
+
+const sceneNumber = ref(0)
+
+const sceneScript = ref([
+  {
+    imagePath: `unaware`,
+    text: `...`,
+    response: `Uhh... excuse me.`,
+    audioTrack: null,
+  },
+  {
+    imagePath: `shrug`,
+    text: `What!? Who are you?`,
+    response: `No, who are YOU?!`,
+    audioTrack: 'what',
+  },
+  {
+    imagePath: `pointing`,
+    text: `How'd you even get into my lab, kiddo?`,
+    response: `The door was unlocked.`,
+    audioTrack: 'how',
+  },
+  {
+    imagePath: `shrug`,
+    text: `No matter, since you're here you can take this off my hands.`,
+    response: `Take what now?`,
+    audioTrack: 'matter',
+  },
+  {
+    imagePath: `hatch1`,
+    text: `Look it's hatching.`,
+    response: `???`,
+    audioTrack: 'look',
+  },
+  {
+    imagePath: `hatch2`,
+    text: `Keep 'em safe now, understand?`,
+    response: `Whatever you say.`,
+    audioTrack: 'care',
+  },
+  {
+    imagePath: `shrug`,
+    text: `If they kick the bucket, that's on you alright?`,
+    response: `...`,
+    audioTrack: 'bucket',
+  },
+  {
+    imagePath: `pointing`,
+    text: `And DON'T USE THE LIL THING FOR BLOOD SPORTS, OKAY?!`,
+    response: `Okay, okay, geez.`,
+    audioTrack: 'blood',
+  },
+])
+
+const narration = new Howl({
+  src: [audio],
+  sprite: {
+    'creed': [0,0],
+    'what': [104, 1502],
+    'how': [2207, 2099],
+    'matter': [4809, 3395],
+    'look': [8704, 1699],
+    'care': [11000, 2101],
+    'bucket': [13703, 2296],
+    'blood': [16600, 3332],
+  }
+});
+
+const advanceScene = () => {
+  if (sceneNumber.value < sceneScript.value.length - 1) {
+    sceneNumber.value += 1
+    narration.stop()
+    narration.play(sceneScript.value[sceneNumber.value].audioTrack)
+  }
+
+}
 
 onMounted(() => {
     if (loadData('hasStartedGame')) {

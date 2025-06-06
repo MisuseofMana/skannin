@@ -80,14 +80,12 @@
 
 <script setup>
 import {ref, computed, onMounted, watch, useTemplateRef} from 'vue'
-import { useRandomNumber, useInterpretNumber } from '@/composables/useNumberInterpretor.js'
-import { monsterDirectory } from '@/composables/useMonsterList.js'
 import { loadData, saveData } from '@/composables/useLocalStorage.js'
 import { animate } from 'animejs'
 
 const startedGame = ref(false)
 
-const currentScene = ref('shop')
+const currentScene = ref('menu')
 
 const swapScene = async (sceneString) => {
   await animate('.game-card', {

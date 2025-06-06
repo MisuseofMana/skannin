@@ -8,3 +8,7 @@ export const useGetImage = ({type = 'placeholder', name = 'placeholder', classif
         return new URL(`../assets/items/${classification}/${path}.png`, import.meta.url).href
     }
 }
+
+export const useEventImage = ({folderName = 'intro', fileName}) => {
+    return new URL(`../assets/${folderName}/${fileName}.png`, import.meta.url).href
+}
