@@ -1,5 +1,5 @@
 <template>
-  <v-card class="text-center text-h6 pa-10">
+  <v-card class="text-center text-body-1 pa-10">
     <div class="d-flex justify-center mb-3">
       <v-img 
         aspect-ratio="2/1"
@@ -8,7 +8,10 @@
         :src="useEventImage({folderName: 'intro', fileName: sceneScript[sceneNumber].imagePath})"
       />
     </div>
-    <p class="mb-10">
+    <p
+      class="mb-8"
+      style="minHeight:55px;"
+    >
       {{ sceneScript[sceneNumber].text }}
     </p>
     <v-btn
@@ -16,6 +19,7 @@
       size="x-large"
       elevation="0"
       color="primary"
+      width="100%"
       :text="sceneScript[sceneNumber].response"
       @click="advanceScene()"
     />
@@ -141,7 +145,7 @@ const sceneScript = ref([
   {
     imagePath: `pointing`,
     text: `How'd you even get into my lab, kiddo?`,
-    response: `The door was unlocked.`,
+    response: `I just walked in.`,
     audioTrack: 'how',
   },
   {
@@ -163,7 +167,7 @@ const sceneScript = ref([
     audioTrack: 'care',
   },
   {
-    imagePath: `shrug`,
+    imagePath: `wagFinger`,
     text: `If they kick the bucket, that's on you alright?`,
     response: `...`,
     audioTrack: 'bucket',
@@ -196,7 +200,6 @@ const advanceScene = () => {
     narration.stop()
     narration.play(sceneScript.value[sceneNumber.value].audioTrack)
   }
-
 }
 
 onMounted(() => {
