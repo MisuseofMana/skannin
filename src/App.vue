@@ -1,32 +1,37 @@
 <template>
   <v-app>
     <v-app-bar>
-      <v-app-bar-title />
-      <v-btn
-        class="mr-4"
-        color="amber-accent-4"
-        variant="tonal"
-        prepend-icon="mdi-information"
-        @click="gameInfoComponent.openModal()"
-      >
-        Game Info
-      </v-btn>
-      <v-btn
-        class="mr-4"
-        color="amber-accent-4"
-        variant="tonal"
-        @click="settingsComponent.openSettings()"
-      >
-        <v-icon>mdi-skull-scan</v-icon>
-      </v-btn>
-      <v-btn
-        class="mr-4"
-        color="amber-accent-4"
-        variant="tonal"
-        @click="shoeNoteComponent.openModal()"
-      >
-        <v-icon>mdi-shoe-print</v-icon>
-      </v-btn>
+      <div class="d-flex align-center justify-space-between flex-grow-1">
+        <div class="ml-2">
+          <Fragments />
+        </div>
+        <div>
+          <v-btn
+            class="mr-4"
+            color="amber-accent-4"
+            variant="tonal"
+            @click="gameInfoComponent.openModal()"
+          >
+            <v-icon> mdi-information</v-icon>
+          </v-btn>
+          <v-btn
+            class="mr-4"
+            color="amber-accent-4"
+            variant="tonal"
+            @click="settingsComponent.openSettings()"
+          >
+            <v-icon>mdi-skull-scan</v-icon>
+          </v-btn>
+          <v-btn
+            class="mr-4"
+            color="amber-accent-4"
+            variant="tonal"
+            @click="shoeNoteComponent.openModal()"
+          >
+            <v-icon>mdi-shoe-print</v-icon>
+          </v-btn>
+        </div>
+      </div>
     </v-app-bar>
 
     <v-main>

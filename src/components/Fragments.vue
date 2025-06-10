@@ -1,31 +1,20 @@
 <template>
-  <v-row
-    justify="end"
-    class="mb-5"
+  <div
+    v-for="(item) in fragmentDirectory"
+    :key="item.name"
+    class="d-flex align-center"
   >
-    <v-col
-      v-for="(item) in fragmentDirectory"
-      :key="item.name"
+    <v-img
+      min-width="40px"
+      max-width="40px"
+      :src="useGetImage(item)"
+    />
+    <h2
+      class="text-h5"
     >
-      <v-sheet
-        class="pa-6 d-flex align-center justify-center"
-        elevation="4"
-        rounded
-        color="blue-grey-darken-4"
-      >
-        <v-img
-          min-width="50px"
-          max-width="50px"
-          :src="useGetImage(item)"
-        />
-        <h2
-          class="text-h5"
-        >
-          x{{ item.quantity }}
-        </h2>
-      </v-sheet>
-    </v-col>
-  </v-row>
+      {{ item.quantity }}
+    </h2>
+  </div>
 </template>
 
 <script setup>

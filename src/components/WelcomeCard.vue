@@ -30,7 +30,7 @@
       class="pa-5 mb-10"
     >
       <p class="mb-5">
-        The old man gave you a level 2 monster!
+        The old man gave you a monster!
       </p>
       <p class="text-h4">
         {{ monsterPicked.name }}
@@ -46,50 +46,50 @@
       <p class="mb-5">
         and some starting items and fragments too!
       </p>
-      <div class="mb-10">
-        <div class="d-flex flex-column justify-center align-center">
-          <p class="text-h4 text-center">
+      <div class="mb-5">
+        <div class="d-flex flex-column justify-center align-center mb-2">
+          <p class="text-h5 text-center">
             {{ itemPicked.name }}
           </p>
           <v-img 
             aspect-ratio="2/1"
-            max-width="200"
-            min-width="200"
+            max-width="100"
+            min-width="100"
             :src="useGetImage(itemPicked)"
           />
         </div>
-        <div class="d-flex flex-column justify-center align-center">
-          <p class="text-h4 text-center">
+        <div class="d-flex flex-column justify-center align-center mb-2">
+          <p class="text-h5 text-center">
             {{ equipPicked.name }}
           </p>
           <v-img 
             aspect-ratio="2/1"
-            max-width="200"
-            min-width="200"
+            max-width="100"
+            min-width="100"
             :src="useGetImage(equipPicked)"
           />
         </div>
         <div class="d-flex flex-column justify-center align-center">
-          <p class="text-h4 text-center">
+          <p class="text-h5 text-center">
             {{ equipPicked2.name }}
           </p>
           <v-img 
             aspect-ratio="2/1"
-            max-width="200"
-            min-width="200"
+            max-width="100"
+            min-width="100"
             :src="useGetImage(equipPicked2)"
           />
         </div>
       </div>
 
       <div class="d-flex flex-column justify-space-around align-center">
-        <p class="text-h4">
-          Fragments x20
+        <p class="text-h5">
+          20 Fragments
         </p>
         <v-img 
           aspect-ratio="2/1"
-          max-width="200"
-          min-width="200"
+          max-width="100"
+          min-width="100"
           :src="useGetImage(fragmentDirectory[0])"
         />
       </div>
@@ -111,7 +111,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onBeforeMount } from 'vue'
 import { monsterDirectory } from '@/composables/useMonsterList.js'
 import { consumableDirectory, equipmentDirectory, fragmentDirectory } from '@/composables/useItemList.js'
 import { useRandomNumber } from '@/composables/useNumberInterpretor.js'
@@ -202,7 +202,7 @@ const advanceScene = () => {
   }
 }
 
-onMounted(() => {
+onBeforeMount(() => {
     if (loadData('hasStartedGame')) {
         emit('bypassStart')
         return
@@ -211,11 +211,11 @@ onMounted(() => {
     const itemPick = useRandomNumber(0, consumableDirectory.value.length - 1)
     const equipPick = useRandomNumber(0, equipmentDirectory.value.length - 2)
     
-    monsterDirectory.value[monsterPick].quantity += 2
+    monsterDirectory.value[monsterPick].quantity += 1
     consumableDirectory.value[itemPick].quantity += 1
     equipmentDirectory.value[equipPick].quantity += 1
     equipmentDirectory.value[equipPick+1].quantity += 1
-    fragmentDirectory.value[0].quantity += 20
+    fragmentDirectory.value[0].quantity = 20
 
     monsterPicked.value = monsterDirectory.value[monsterPick]
     itemPicked.value = consumableDirectory.value[itemPick]

@@ -1,21 +1,20 @@
 <template>
   <v-container
     max-width="900px"
-    class="pa-10"
+    class="px-5"
   >
     <WelcomeCard
       v-if="!startedGame"
       @bypass-start="startedGame = true"
     />
 
-    <Fragments v-if="startedGame" />
     <div
       v-if="startedGame"
       class="game-card"      
     >
       <v-card
         :key="currentScene"
-        class="pa-10"
+        class="pa-5"
       >
         <v-row v-if="currentScene != 'menu'">
           <v-col cols="12">
