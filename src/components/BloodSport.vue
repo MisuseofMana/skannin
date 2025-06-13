@@ -13,7 +13,11 @@
     </div>
     <v-img 
       min-width="325"
-      src="`../assets/bloodsport/1.png`"
+      :src="useEventImage({folderName: 'shop', fileName: '1'})"
     />
   </div>
 </template>
+
+<script setup>
+import { useEventImage } from '@/composables/useImageRoute'
+</script>
