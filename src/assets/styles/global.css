@@ -3,6 +3,11 @@
 }
 
 .dead {
-    filter: brightness(50%) blur(0.2rem) sepia() saturate(0.2);
-    transform: rotate(180deg);
+    filter: blur(0.05rem) saturate(0);
+    transform: rotate(90deg);
+}
+
+.nursery {
+    filter: saturate(0.5);
+    opacity: 0.25;
 }

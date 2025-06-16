@@ -16,20 +16,6 @@
         :key="currentScene"
         class="pa-5"
       >
-        <v-row v-if="currentScene != 'menu'">
-          <v-col cols="12">
-            <v-btn
-              size="x-large"
-              width="100%"
-              elevation="0"
-              color="grey"
-              prepend-icon="mdi-arrow-left"
-              text="Back To Menu"
-              @click="swapScene('menu')"
-            />
-          </v-col>
-        </v-row>
-
         <MenuButtons
           v-if="currentScene === 'menu'"
           @switch-scene="(e) => swapScene(e)"
@@ -44,30 +30,40 @@
               <Battle
                 v-show="currentScene === 'battle'"
                 key="battle"
+                @leave-scene="swapScene('menu')"
               />
               <Shop
                 v-show="currentScene === 'shop'"
                 key="shop"
+                :scene-name="currentScene"
+                @leave-scene="swapScene('menu')"
               />
               <Nursery
                 v-show="currentScene === 'nursery'"
                 key="nursery"
+                :scene-name="currentScene"
+                @leave-scene="swapScene('menu')"
               />
               <BloodSport
                 v-show="currentScene === 'bloodsport'"
                 key="bloodsport"
+                :scene-name="currentScene"
+                @leave-scene="swapScene('menu')"
               />
               <Monsters
                 v-show="currentScene === 'monsters'"
                 key="monsters"
+                @leave-scene="swapScene('menu')"
               />
               <Consumables
                 v-show="currentScene === 'consumable'"
                 key="consumable"
+                @leave-scene="swapScene('menu')"
               />
               <Equipment
                 v-show="currentScene === 'equipment'"
                 key="equipment"
+                @leave-scene="swapScene('menu')"
               />
             </v-col>
           </v-row>
@@ -78,8 +74,7 @@
 </template>
 
 <script setup>
-import {ref, computed, onMounted, watch, useTemplateRef} from 'vue'
-import { loadData, saveData } from '@/composables/useLocalStorage.js'
+import {ref} from 'vue'
 import { animate } from 'animejs'
 
 const startedGame = ref(false)
@@ -87,6 +82,7 @@ const startedGame = ref(false)
 const currentScene = ref('menu')
 
 const swapScene = async (sceneString) => {
+  console.log('swapScene', sceneString)
   await animate('.game-card', {
     opacity: [1,0],
     duration: 200,

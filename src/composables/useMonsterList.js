@@ -11,6 +11,10 @@ const MonsterTypes = {
 
 export const monsterDirectory = ref([
     {
+      nurseryData: {
+        isInNursery: false,
+        releaseDate: null,
+      },
       classification: DT.MONSTER,
       quantity: 0,
       name: "Boostbone",
@@ -28,6 +32,10 @@ export const monsterDirectory = ref([
       specialInfo: "Uses after boosters to take to the skies. Always playing AM radio recieved through it's antenna at full blast."
     },
     {
+      nurseryData: {
+        isInNursery: false,
+        releaseDate: null,
+      },
       classification: DT.MONSTER,
       quantity: 0,
       name: "Skelling",
@@ -45,6 +53,10 @@ export const monsterDirectory = ref([
       specialInfo: "A bit rough around the edges this one. A genuine softie at heart."
     },
     {
+      nurseryData: {
+        isInNursery: false,
+        releaseDate: null,
+      },
       classification: DT.MONSTER,
       quantity: 0,
       name: "Wormbo",
@@ -62,6 +74,10 @@ export const monsterDirectory = ref([
       specialInfo: "Like those worm on a string, but actually alive and not just a charlatons magic trick meant to dissapoint children."
     },
     {
+      nurseryData: {
+        isInNursery: false,
+        releaseDate: null,
+      },
       classification: DT.MONSTER,
       quantity: 0,
       name: "Beesquito",
@@ -79,6 +95,10 @@ export const monsterDirectory = ref([
       specialInfo: "Half bee, half mosquito, a real pest. Never really gets a hint, but is a good listener."
     },
     {
+      nurseryData: {
+        isInNursery: false,
+        releaseDate: null,
+      },
       classification: DT.MONSTER,
       quantity: 0,
       name: "Bayga",
@@ -96,6 +116,10 @@ export const monsterDirectory = ref([
       specialInfo: "Pretty grounded emotionally for a monster, usually a loner and loves to climb around in trees and eat birds."
     },
     {
+      nurseryData: {
+        isInNursery: false,
+        releaseDate: null,
+      },
       classification: DT.MONSTER,
       quantity: 0,
       name: "Impin",
@@ -113,6 +137,10 @@ export const monsterDirectory = ref([
       specialInfo: "A stinky little devil thing. Knows a few minor earth cantrips and brags a lot about them."
     },
     {
+      nurseryData: {
+        isInNursery: false,
+        releaseDate: null,
+      },
       classification: DT.MONSTER,
       quantity: 0,
       name: "Trunk",
@@ -130,6 +158,10 @@ export const monsterDirectory = ref([
       specialInfo: "A tree that was over-fertilized and gained sentience. Doesn't have much to say, and is all the more pleasant for it."
     },
     {
+      nurseryData: {
+        isInNursery: false,
+        releaseDate: null,
+      },
       classification: DT.MONSTER,
       quantity: 0,
       name: "Shrewt",
@@ -147,6 +179,10 @@ export const monsterDirectory = ref([
       specialInfo: "Shrewt has an ungodly smell, like those corpse flowers in the Sumatran rain forests."
     },
     {
+      nurseryData: {
+        isInNursery: false,
+        releaseDate: null,
+      },
       classification: DT.MONSTER,
       quantity: 0,
       name: "Braino",
@@ -164,6 +200,10 @@ export const monsterDirectory = ref([
       specialInfo: "A two legged salamander born in a volcano. Has a hot temper and is writing a sad novel in its free time."
     },
     {
+      nurseryData: {
+        isInNursery: false,
+        releaseDate: null,
+      },
       classification: DT.MONSTER,
       quantity: 0,
       name: "Jakwabbit",
@@ -181,6 +221,10 @@ export const monsterDirectory = ref([
       specialInfo: "Moves really fast, but trips over himself often. The kinda monster that won't show up to your wedding."
     },
     {
+      nurseryData: {
+        isInNursery: false,
+        releaseDate: null,
+      },
       classification: DT.MONSTER,
       quantity: 0,
       name: "Yeek",
@@ -198,6 +242,10 @@ export const monsterDirectory = ref([
       specialInfo: "Yeek is the king of the monsters, well, at least that's what Yeek thinks."
     },
     {
+      nurseryData: {
+        isInNursery: false,
+        releaseDate: null,
+      },
       classification: DT.MONSTER,
       quantity: 0,
       name: "Pinche",
@@ -215,6 +263,10 @@ export const monsterDirectory = ref([
       specialInfo: "Hard exterior, hard interior, as loyal as they come. Probably tastes amazing in a soup."
     },
     {
+      nurseryData: {
+        isInNursery: false,
+        releaseDate: null,
+      },
       classification: DT.MONSTER,
       quantity: 0,
       name: "Bleyeb",
@@ -232,6 +284,10 @@ export const monsterDirectory = ref([
       specialInfo: "An odd monster as monsters go. Interested in SEEING things with its big eyes."
     },
     {
+      nurseryData: {
+        isInNursery: false,
+        releaseDate: null,
+      },
       classification: DT.MONSTER,
       quantity: 0,
       name: "Chrimp",
@@ -249,6 +305,10 @@ export const monsterDirectory = ref([
       specialInfo: "Escaped a crabbing vessel recently and is a little traumatized. Needs therapy."
     },
     {
+      nurseryData: {
+        isInNursery: false,
+        releaseDate: null,
+      },
       classification: DT.MONSTER,
       quantity: 0,
       name: "Finna",
@@ -266,6 +326,10 @@ export const monsterDirectory = ref([
       specialInfo: "Really just wants to find common ground with you but has a hard time articulating."
     },  
     {
+      nurseryData: {
+        isInNursery: false,
+        releaseDate: null,
+      },
       classification: DT.MONSTER,
       quantity: 0,
       name: "Guhpee",

@@ -69,22 +69,11 @@
             :src="useGetImage(equipPicked)"
           />
         </div>
-        <div class="d-flex flex-column justify-center align-center">
-          <p class="text-h5 text-center">
-            {{ equipPicked2.name }}
-          </p>
-          <v-img 
-            aspect-ratio="2/1"
-            max-width="100"
-            min-width="100"
-            :src="useGetImage(equipPicked2)"
-          />
-        </div>
       </div>
 
       <div class="d-flex flex-column justify-space-around align-center">
         <p class="text-h5">
-          20 Fragments
+          40 Fragments
         </p>
         <v-img 
           aspect-ratio="2/1"
@@ -124,7 +113,6 @@ import { useGetImage, useEventImage } from '@/composables/useImageRoute.js'
 const monsterPicked = ref({})
 const itemPicked = ref({})
 const equipPicked = ref({})
-const equipPicked2 = ref({})
 const emit = defineEmits(['bypassStart'])
 
 const sceneNumber = ref(0)
@@ -215,12 +203,11 @@ onBeforeMount(() => {
     consumableDirectory.value[itemPick].quantity += 1
     equipmentDirectory.value[equipPick].quantity += 1
     equipmentDirectory.value[equipPick+1].quantity += 1
-    fragmentDirectory.value[0].quantity = 20
+    fragmentDirectory.value[0].quantity = 40
 
     monsterPicked.value = monsterDirectory.value[monsterPick]
     itemPicked.value = consumableDirectory.value[itemPick]
     equipPicked.value = equipmentDirectory.value[equipPick]
-    equipPicked2.value = equipmentDirectory.value[equipPick+1]
     saveData('hasStartedGame', true)
 })
 </script>

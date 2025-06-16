@@ -1,14 +1,39 @@
 <template>
-  <v-row>
+  <v-row style="max-width: 400px;">
+    <v-col>
+      <v-btn
+        size="x-large"
+        width="100%"
+        elevation="0"
+        color="grey"
+        class="mb-5"
+        prepend-icon="mdi-arrow-left"
+        text="Back To Menu"
+        @click="emit('leave-scene')"
+      />
+
+      <div class="d-flex justify-center flex-grow-1">
+      <v-icon
+        size="35"
+        class="mr-2"
+      >
+        mdi-hanger
+      </v-icon>
+      <h2 class="text-h4 mb-3">
+        Equipment
+      </h2>
+    </div>
+    </v-col>
+
     <v-col
       v-for="(item, index) in equipmentDirectory"
       :key="item.name"
       cols="12"
-      md="6"
     >
       <v-sheet
         class="pa-6"
         elevation="4"
+        color="blue-grey-darken-4"
         height="100%"
         rounded
       >
@@ -48,6 +73,8 @@ import { loadData, saveData } from '@/composables/useLocalStorage.js'
 import { onMounted } from 'vue'
 import { useGetImage } from '@/composables/useImageRoute.js'
 import { sortByQuantity } from '@/composables/useSorting.js'
+
+const emit = defineEmits(['leave-scene'])
 
 onMounted(() => {
   const savedEquipment = loadData('savedEquipment')

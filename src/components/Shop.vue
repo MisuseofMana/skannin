@@ -1,6 +1,16 @@
 <template>
-  <div class="mt-2">
-    <div class="d-flex justify-center text-amber-darken-2 flex-grow-1">
+  <div class="mt-2" style="max-width: 400px;">
+    <v-btn
+      class="mb-5"
+      size="x-large"
+      width="100%"
+      elevation="0"
+      color="grey"
+      prepend-icon="mdi-arrow-left"
+      text="Back To Menu"
+      @click="sayGoodbye()"
+    />
+    <div class="d-flex justify-center flex-grow-1">
       <v-icon
         size="35"
         class="mr-2"
@@ -24,13 +34,13 @@
       Go back to menu to restock.
     </p>
     <v-img
-      min-width="370"
+      min-width="400"
       :src="useEventImage({folderName: 'shop', fileName: sceneScript[sceneNumber].imagePath})"
     />
     <div class="text-body-1 text-center">
       <p
         class="py-3 px-8"
-        style="minHeight:75px; backgroundColor: black;"
+        style="minHeight:75px; min-width: 400px; backgroundColor: black;"
       >
         {{ sceneScript[sceneNumber].text }}
       </p>
@@ -88,13 +98,21 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted } from 'vue'
 import audio from '../assets/shop/audio.wav'
 import { useEventImage, useGetImage } from '@/composables/useImageRoute'
 import { consumableDirectory, equipmentDirectory, fragmentDirectory } from '@/composables/useItemList'
 import { shuffle } from '@/composables/useSorting'
 import { useRandomNumber } from '@/composables/useNumberInterpretor'
 import { loadData, saveData } from '@/composables/useLocalStorage.js'
+
+const props = defineProps({
+  sceneName: {
+    type: String,
+    required: true,
+  }
+})
+const emit = defineEmits(['leave-scene'])
 
 const sceneNumber = ref(0)
 const sceneScript = ref([
@@ -194,13 +212,9 @@ onMounted(() => {
   }
 })
 
-onBeforeUnmount(() => {
-  sayGoodbye()
-  clearInterval(countdownInterval);
-});
-
 const playAudio = () => {
   narration.stop()
+  if(props.sceneName != 'shop') return
   narration.play(sceneScript.value[sceneNumber.value].audioTrack)
 }
 
@@ -222,6 +236,8 @@ const sayGoodPurchase = () => {
 const sayGoodbye = () => {
   sceneNumber.value = useRandomNumber(7, 8)
   playAudio()
+  emit('leave-scene')
+  clearInterval(countdownInterval);
 }
 
 const sayRestockLine = () => {
@@ -266,7 +282,6 @@ const getEquipment = (which) => {
   return equipmentDirectory.value.find(e => e.name == which.name)
 }
 
-
 const narration = new Howl({
   src: [audio],
   sprite: {
@@ -279,7 +294,7 @@ const narration = new Howl({
     'fave': [21620, 2098],
     'comeback': [23819, 1849],
     'wares': [25991, 2321],
-    'goodluck': [28747, 1874],
+    'goodluck': [28747, 1900],
   }
 });
 </script>

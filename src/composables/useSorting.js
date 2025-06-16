@@ -10,6 +10,18 @@ export const sortByQuantity = (arrayToSort) => {
     })
 }
 
+export const sortMonsterByHP = (arrayToSort) => {
+  return arrayToSort.sort((a,b) => {
+      if (a.stats.hp > b.stats.hp) {
+        return -1
+      }
+      else if (a.stats.hp < b.stats.hp) {
+        return 1
+      }
+      else return 0
+  })
+}
+
 export const shuffle = (arrayToShuffle) => {
   const copy = [...arrayToShuffle]
 
