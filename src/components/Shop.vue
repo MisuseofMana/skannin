@@ -22,16 +22,9 @@
       </h2>
     </div>
     <p
-      v-if="timeLeft.total > 0"
       class="text-body-1 mb-3 text-center"
     >
       Restock in: {{ timeLeft.minutes }}m {{ timeLeft.seconds }}s
-    </p>
-    <p
-      v-else-if="timeLeft.total <= 0"
-      class="text-body-1 mb-3 text-center"
-    >
-      Go back to menu to restock.
     </p>
     <v-img
       min-width="400"
@@ -165,51 +158,46 @@ const sceneScript = ref([
 
 let countdownInterval = null;
 
-const updateCountdown = (endTime) => {
-  const total = Date.parse(endTime) - Date.now();
+const localRefreshDate = ref(null)
 
-  if (total > 0) {
+const updateCountdown = () => {
+  const totalTimeLeft = new Date(localRefreshDate.value) - Date.now();
+
+  if (totalTimeLeft > 0) {
     timeLeft.value = {
-      total,
-      hours: Math.floor((total / (1000 * 60 * 60)) % 24),
-      minutes: Math.floor((total / (1000 * 60)) % 60),
-      seconds: Math.floor((total / 1000) % 60),
+      minutes: Math.floor((totalTimeLeft / (1000 * 60)) % 60),
+      seconds: Math.floor((totalTimeLeft / 1000) % 60),
     };
   } else {
-    timeLeft.value.total = 0;
-    clearInterval(countdownInterval);
+    restockShop()
   }
 }
     
 const forSale = ref([])
 const timeLeft = ref({
-      total: 0,
-      hours: 0,
-      minutes: 0,
-      seconds: 0,
-    });
+  minutes: 0,
+  seconds: 0,
+});
 
 
 onMounted(() => {
-  const savedDate = loadData('shopVisitTimestamp')
-  const now = new Date()
-  const last = savedDate ? new Date(savedDate) : now
-  const difference = (now - last) / (1000 * 60 * 60)
-  const endDate = new Date(last.getTime() + 60 * 60 * 1000)
-  updateCountdown(endDate);
-  countdownInterval = setInterval(() => updateCountdown(endDate), 1000);
+  sayGreeting()
 
-  if (difference >= 1) {
+  const now = new Date()
+  const shopStock = loadData('shopInventory')
+  const shopRefreshDate = loadData('shopRefreshDate')
+
+  if (shopStock && shopRefreshDate) {
+    forSale.value = shopStock
+    localRefreshDate.value = shopRefreshDate
+  }
+
+  if (shopRefreshDate && now > shopRefreshDate) {
     restockShop()
   }
-  else if (difference < 1 && savedDate) {
-    forSale.value = loadData('shopInventory')
-    sayGreeting()
-  }
-  else {
-    sayGreeting()
-    restockShop()
-  }
+  
+  updateCountdown();
+  countdownInterval = setInterval(() => updateCountdown(), 1000);
 })
 
 const playAudio = () => {
@@ -240,20 +228,17 @@ const sayGoodbye = () => {
   clearInterval(countdownInterval);
 }
 
-const sayRestockLine = () => {
-  sceneNumber.value = useRandomNumber(1,2)
-  playAudio()
-}
-
 const getAvailableStock = () => {
   return shuffle([...consumableDirectory.value, ...equipmentDirectory.value])
 }
 
 const restockShop = () => {
-  saveData('shopVisitTimestamp', new Date())
+  const now = new Date()
   forSale.value = getAvailableStock().slice(0, 4)
+  const newRestockDate = new Date(now.getTime() + 60 * 60 * 1000)
   saveData('shopInventory', forSale.value)
-  sayRestockLine()
+  saveData('shopRefreshDate', newRestockDate)
+  localRefreshDate.value = newRestockDate
 }
 
 const attemptPurchase = (item) => {

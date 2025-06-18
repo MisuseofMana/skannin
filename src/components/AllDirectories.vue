@@ -49,6 +49,7 @@
                 key="bloodsport"
                 :scene-name="currentScene"
                 @leave-scene="swapScene('menu')"
+                @start-deathmatch="(e) => startDeathmatch(e)"
               />
               <Monsters
                 v-show="currentScene === 'monsters'"
@@ -65,6 +66,11 @@
                 key="equipment"
                 @leave-scene="swapScene('menu')"
               />
+              <Deathmatch
+                v-show="currentScene === 'deathmatch'"
+                key="deathmatch"
+                @leave-scene="swapScene('menu')"
+              />
             </v-col>
           </v-row>
         </div>
@@ -76,13 +82,26 @@
 <script setup>
 import {ref} from 'vue'
 import { animate } from 'animejs'
+import { saveData, loadData } from '@/composables/useLocalStorage'
+import { onMounted } from 'vue'
 
 const startedGame = ref(false)
 
 const currentScene = ref('menu')
 
+onMounted(() => {
+  const savedDeathmatchData = loadData('savedDeathmatchData')
+  if (savedDeathmatchData) {
+    swapScene('deathmatch')
+  }
+})
+
+const startDeathmatch = (e) => {
+  saveData('savedDeathmatchData', e)
+  swapScene('deathmatch')
+}
+
 const swapScene = async (sceneString) => {
-  console.log('swapScene', sceneString)
   await animate('.game-card', {
     opacity: [1,0],
     duration: 200,
