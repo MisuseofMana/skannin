@@ -25,6 +25,16 @@
     </div>
     </v-col>
 
+    <v-btn
+        size="small"
+        rounded="xl"
+        elevation="0"
+        color="red"
+        class="mb-5"
+        text="Give All Consumables"
+        @click="giveAllConsumables"
+      />
+
     <v-col
       v-for="monster in monsterDirectory"
       :key="monster.name"
@@ -43,10 +53,12 @@
           <v-row>
             <v-col>
               <v-img
+                max-width="200px"
                 :class="[
                   monster.quantity > 0 ? '' : 'shadow',
                   monster.stats.hp <= 0 ? 'dead' : ''
                 ]"
+                class="mx-auto mb-4"
                 :src="useGetImage(monster)"
               />
               <div
@@ -70,7 +82,7 @@
                     size="x-large"
                     height="20px"
                     rounded
-                    max="50"
+                    :max="calculatedXPGoal(monster.quantity)"
                     :model-value="monster.stats.xp"
                   />
                   <p class="text-body-1 ml-2 text-no-wrap">{{ monster.stats.xp }} / {{ calculatedXPGoal(monster.quantity) }} </p>
@@ -238,7 +250,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { monsterDirectory } from '@/composables/useMonsterList.js'
-import { equipmentDirectory, consumableDirectory } from '@/composables/useItemList.js'
+import { equipmentDirectory, consumableDirectory, giveAllConsumables } from '@/composables/useItemList.js'
 import { loadData } from '@/composables/useLocalStorage.js'
 import { onMounted } from 'vue'
 import { useGetImage } from '@/composables/useImageRoute.js'
@@ -295,15 +307,16 @@ const useItem = (item, monster) => {
   targetItem.quantity -= 1
 
   if (targetItem.buffStat) targetMonster.stats[targetItem.buffStat] += targetItem.value
-  if (targetMonster.stats[targetItem.buffStat] >= targetMonster.stats.maxhp) targetMonster.stats.hp = targetMonster.stats.maxhp
   if (targetItem.debuffStat) targetMonster.stats[targetItem.debuffStat] -= targetItem.damage
   if (targetMonster.stats[targetItem.debuffStat] <= 0) targetMonster.stats[targetItem.debuffStat] = 0
 
-  if (targetMonster.stats.xp >= 40) {
+  if (targetItem.buffStat === 'hp' && targetMonster.stats.hp >= targetMonster.stats.maxhp) targetMonster.stats.hp = targetMonster.stats.maxhp
+
+  if (targetMonster.stats.xp >= calculatedXPGoal(targetMonster.quantity)) {
+    console.log('leveling up')
+    targetMonster.stats.xp = Math.max(0, targetMonster.stats.xp - calculatedXPGoal(targetMonster.quantity))
     targetMonster.quantity += 1
-    targetMonster.stats.maxhp += 2
-    targetMonster.stats.maxattack += 1
-    targetMonster.stats.maxdefense += 1
+    targetMonster.stats.maxhp += 2 + targetMonster.quantity
   }
 }
 

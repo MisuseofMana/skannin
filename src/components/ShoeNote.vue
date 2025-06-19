@@ -23,13 +23,19 @@
       </v-row>
       <v-row class="mb-15">
         <v-col>
-          <h2 class="text-h2 mb-3">
-            Made for shoe,
+          <h2 class="text-h3 mb-5">
+            Made for you, shoe,
           </h2>
           <p class="text-body-1 mb-3">
             Happy 30th birthday my treasured brother. I hope this game instills a childlike wonder and nostaligia for you.
           </p>
-          <h3 class="text-h4">
+          <p class="text-body-1 mb-3">
+            I roped some of the people we care about most into helping me bring a bit of je ne sais quoi to the characters within.
+          </p>
+          <p class="text-body-1 mb-5">
+            Hope you like it.
+          </p>
+          <h3 class="text-h5">
             Love, Shoe.
           </h3>
         </v-col>

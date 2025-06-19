@@ -52,7 +52,7 @@ const settingsComponent = useTemplateRef('settingsRef')
 const gameInfoComponent = useTemplateRef('gameInfoRef')
 const shoeNoteComponent = useTemplateRef('shoeNoteRef')
 
-const gameVersion = ref('0.0.3')
+const gameVersion = ref('0.1.0')
 
 onMounted(() => {
   if (loadData('gameVersion') !== gameVersion.value) {

@@ -26,7 +26,7 @@
       <v-row class="mb-15">
         <v-col>
           <p class="text-body-2 text-grey-darken-1 mb-6">
-            v.0.0.2
+            v.0.1.0
           </p>
           <h2 class="text-h4 mb-2">
             About
@@ -40,7 +40,7 @@
           <p class="text-body-1 mb-2">
             Against the old man's advice, make your freaky little monster pets participate in blood sport death matches. Try your best to care for them, win fragments in the deathmatches and spend them on bits, baubels, and better gear to equip so you can become the ultimate monster fighter.
           </p>
-          <p>"Gotta get most of em!" just like in that popular japanese pocket monster game about cockfighting."</p>
+          <p>"Gotta get most of em" just like in that popular japanese pocket monster game!"</p>
           <!-- <p class="text-body-1 mb-5">
             Equip your monsters with gear, feed them junkfood and level them up by scanning more barcodes.
           </p>

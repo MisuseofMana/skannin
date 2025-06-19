@@ -262,6 +262,9 @@ const attemptPurchase = (item) => {
     if (item.classification === 'consumable') {
       getItem(item).quantity += 1
     }
+    if (item.classification === 'monster') {
+      getMonster(item).quantity += 1
+    }
     saveData('shopInventory', forSale.value)
   }
 }
@@ -272,6 +275,10 @@ const getItem = (which) => {
 
 const getEquipment = (which) => {
   return equipmentDirectory.value.find(e => e.name == which.name)
+}
+
+const getMonster = (monster) => {
+  return monsterDirectory.value.find(m => m.name == monster.name)
 }
 
 const narration = new Howl({
