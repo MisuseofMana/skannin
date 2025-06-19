@@ -23,6 +23,8 @@
       </h2>
     </div>
     <v-img
+      aspect-ratio="1.5"
+      min-width="300px"
       :src="useEventImage({folderName: 'nursery', fileName: sceneScript[sceneNumber].imagePath})"
     />
     <div class="text-body-1 text-center mb-5">
@@ -81,10 +83,15 @@
     </div>
     <div v-else>
       <v-card
-        class="text-body-1 pa-5"
+        class="text-body-1 text-center pa-5"
         color="teal"
       >
-        Looks like all your monsters are healthy. Come back when you need to let them rest.
+      <p>
+        All your monsters are healthy.
+      </p>
+      <p>
+        Come back if they get hurt.
+      </p>
       </v-card>
     </div>
   </div>

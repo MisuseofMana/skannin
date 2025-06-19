@@ -295,7 +295,9 @@ const useItem = (item, monster) => {
   targetItem.quantity -= 1
 
   if (targetItem.buffStat) targetMonster.stats[targetItem.buffStat] += targetItem.value
+  if (targetMonster.stats[targetItem.buffStat] >= targetMonster.stats.maxhp) targetMonster.stats.hp = targetMonster.stats.maxhp
   if (targetItem.debuffStat) targetMonster.stats[targetItem.debuffStat] -= targetItem.damage
+  if (targetMonster.stats[targetItem.debuffStat] <= 0) targetMonster.stats[targetItem.debuffStat] = 0
 
   if (targetMonster.stats.xp >= 40) {
     targetMonster.quantity += 1

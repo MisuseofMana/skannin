@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-2" style="max-width: 400px;">
+  <div>
     <v-btn
       class="mb-5"
       size="x-large"
@@ -10,7 +10,7 @@
       text="Back To Menu"
       @click="sayGoodbye()"
     />
-    <div class="d-flex justify-center flex-grow-1">
+    <div class="d-flex justify-center align-center flex-grow-1">
       <v-icon
         size="35"
         class="mr-2"
@@ -27,13 +27,14 @@
       Restock in: {{ timeLeft.minutes }}m {{ timeLeft.seconds }}s
     </p>
     <v-img
-      min-width="400"
+      aspect-ratio="1.5"
+      min-width="300px"
       :src="useEventImage({folderName: 'shop', fileName: sceneScript[sceneNumber].imagePath})"
     />
     <div class="text-body-1 text-center">
       <p
         class="py-3 px-8"
-        style="minHeight:75px; min-width: 400px; backgroundColor: black;"
+        style="minHeight:75px; backgroundColor: black;"
       >
         {{ sceneScript[sceneNumber].text }}
       </p>
@@ -62,7 +63,7 @@
             :src="useGetImage(item)"
           />
           <div class="mr-5">
-            <p class="text-h5 text-red">
+            <p class="text-white font-weight-black">
               SOLD OUT
             </p>
           </div>
@@ -77,11 +78,8 @@
             :src="useGetImage(item)"
           />
           <div class="mr-5">
-            <p class="text-h5">
-              Buy for {{ item.cost }} Frag
-            </p>
-            <p class="text-white text-right text-h6">
-              {{ item.name }}
+            <p class="text-h6 text-right">
+              {{ item.cost }} Frag
             </p>
           </div>
         </div>
@@ -95,6 +93,7 @@ import { ref, onMounted } from 'vue'
 import audio from '../assets/shop/audio.wav'
 import { useEventImage, useGetImage } from '@/composables/useImageRoute'
 import { consumableDirectory, equipmentDirectory, fragmentDirectory } from '@/composables/useItemList'
+import { monsterDirectory } from '@/composables/useMonsterList'
 import { shuffle } from '@/composables/useSorting'
 import { useRandomNumber } from '@/composables/useNumberInterpretor'
 import { loadData, saveData } from '@/composables/useLocalStorage.js'
@@ -232,10 +231,18 @@ const getAvailableStock = () => {
   return shuffle([...consumableDirectory.value, ...equipmentDirectory.value])
 }
 
+const getAvailableMonster = () => {
+  const copyOfMonsters = [...monsterDirectory.value]
+  const unOwnedMonsters = copyOfMonsters.filter(m => m.quantity <= 0)
+  return shuffle(unOwnedMonsters)[0]
+}
+
 const restockShop = () => {
   const now = new Date()
-  forSale.value = getAvailableStock().slice(0, 4)
-  const newRestockDate = new Date(now.getTime() + 60 * 60 * 1000)
+  const stock = getAvailableStock().slice(0, 4)
+  stock.push(getAvailableMonster())
+  forSale.value = stock
+  const newRestockDate = new Date(now.getTime() + 60 * 30 * 1000)
   saveData('shopInventory', forSale.value)
   saveData('shopRefreshDate', newRestockDate)
   localRefreshDate.value = newRestockDate

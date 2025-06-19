@@ -7,6 +7,10 @@
     transform: rotate(90deg);
 }
 
+.loseTint {
+    filter: brightness(0.25);
+}
+
 .nursery {
     filter: saturate(0.5);
     opacity: 0.25;

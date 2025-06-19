@@ -46,41 +46,32 @@
       <p class="mb-5">
         and some starting items and fragments too!
       </p>
-      <div class="mb-5">
-        <div class="d-flex flex-column justify-center align-center mb-2">
-          <p class="text-h5 text-center">
-            {{ itemPicked.name }}
-          </p>
+      <div class="mb-5 d-flex justify-center align-center">
           <v-img 
             aspect-ratio="2/1"
             max-width="100"
             min-width="100"
             :src="useGetImage(itemPicked)"
           />
-        </div>
-        <div class="d-flex flex-column justify-center align-center mb-2">
-          <p class="text-h5 text-center">
-            {{ equipPicked.name }}
-          </p>
           <v-img 
+          class="mt-5"
             aspect-ratio="2/1"
             max-width="100"
             min-width="100"
             :src="useGetImage(equipPicked)"
           />
-        </div>
       </div>
 
       <div class="d-flex flex-column justify-space-around align-center">
-        <p class="text-h5">
-          40 Fragments
-        </p>
         <v-img 
-          aspect-ratio="2/1"
-          max-width="100"
-          min-width="100"
-          :src="useGetImage(fragmentDirectory[0])"
+        aspect-ratio="2/1"
+        max-width="100"
+        min-width="100"
+        :src="useGetImage(fragmentDirectory[0])"
         />
+        <p class="text-h5">
+          55 Fragments
+        </p>
       </div>
     </v-sheet>
 
@@ -199,11 +190,11 @@ onBeforeMount(() => {
     const itemPick = useRandomNumber(0, consumableDirectory.value.length - 1)
     const equipPick = useRandomNumber(0, equipmentDirectory.value.length - 2)
     
-    monsterDirectory.value[monsterPick].quantity += 1
+    monsterDirectory.value[monsterPick].quantity += 2
     consumableDirectory.value[itemPick].quantity += 1
     equipmentDirectory.value[equipPick].quantity += 1
     equipmentDirectory.value[equipPick+1].quantity += 1
-    fragmentDirectory.value[0].quantity = 40
+    fragmentDirectory.value[0].quantity = 55
 
     monsterPicked.value = monsterDirectory.value[monsterPick]
     itemPicked.value = consumableDirectory.value[itemPick]

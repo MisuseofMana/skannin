@@ -19,6 +19,7 @@ export const monsterDirectory = ref([
       quantity: 0,
       name: "Boostbone",
       type: MonsterTypes.AIR,
+      cost: 50,
       stats: {
         xp:1,
         hp: 6,
@@ -40,6 +41,7 @@ export const monsterDirectory = ref([
       quantity: 0,
       name: "Skelling",
       type: MonsterTypes.AIR,
+      cost: 50,
       stats: {
         xp:1,
         hp: 6,
@@ -61,6 +63,7 @@ export const monsterDirectory = ref([
       quantity: 0,
       name: "Wormbo",
       type: MonsterTypes.AIR,
+      cost: 50,
       stats: {
         xp:1,
         hp: 6,
@@ -82,6 +85,7 @@ export const monsterDirectory = ref([
       quantity: 0,
       name: "Beesquito",
       type: MonsterTypes.AIR,
+      cost: 50,
       stats: {
         xp:1,
         hp: 6,
@@ -103,6 +107,7 @@ export const monsterDirectory = ref([
       quantity: 0,
       name: "Bayga",
       type: MonsterTypes.EARTH,
+      cost: 50,
       stats: {
         xp:1,
         hp: 6,
@@ -124,6 +129,7 @@ export const monsterDirectory = ref([
       quantity: 0,
       name: "Impin",
       type: MonsterTypes.EARTH,
+      cost: 50,
       stats: {
         xp:1,
         hp: 6,
@@ -145,6 +151,7 @@ export const monsterDirectory = ref([
       quantity: 0,
       name: "Trunk",
       type: MonsterTypes.EARTH,
+      cost: 50,
       stats: {
         xp:1,
         hp: 6,
@@ -166,6 +173,7 @@ export const monsterDirectory = ref([
       quantity: 0,
       name: "Shrewt",
       type: MonsterTypes.EARTH,
+      cost: 50,
       stats: {
         xp:1,
         hp: 6,
@@ -187,6 +195,7 @@ export const monsterDirectory = ref([
       quantity: 0,
       name: "Braino",
       type: MonsterTypes.FIRE,
+      cost: 50,
       stats: {
         xp:1,
         hp: 6,
@@ -208,6 +217,7 @@ export const monsterDirectory = ref([
       quantity: 0,
       name: "Jakwabbit",
       type: MonsterTypes.FIRE,
+      cost: 50,
       stats: {
         xp:1,
         hp: 6,
@@ -229,6 +239,7 @@ export const monsterDirectory = ref([
       quantity: 0,
       name: "Yeek",
       type: MonsterTypes.FIRE,
+      cost: 50,
       stats: {
         xp:1,
         hp: 6,
@@ -250,6 +261,7 @@ export const monsterDirectory = ref([
       quantity: 0,
       name: "Pinche",
       type: MonsterTypes.FIRE,
+      cost: 50,
       stats: {
         xp:1,
         hp: 6,
@@ -271,6 +283,7 @@ export const monsterDirectory = ref([
       quantity: 0,
       name: "Bleyeb",
       type: MonsterTypes.WATER,
+      cost: 50,
       stats: {
         xp:1,
         hp: 6,
@@ -292,6 +305,7 @@ export const monsterDirectory = ref([
       quantity: 0,
       name: "Chrimp",
       type: MonsterTypes.WATER,
+      cost: 50,
       stats: {
         xp:1,
         hp: 6,
@@ -313,6 +327,7 @@ export const monsterDirectory = ref([
       quantity: 0,
       name: "Finna",
       type: MonsterTypes.WATER,
+      cost: 50,
       stats: {
         xp:1,
         hp: 6,
@@ -334,6 +349,7 @@ export const monsterDirectory = ref([
       quantity: 0,
       name: "Guhpee",
       type: MonsterTypes.WATER,
+      cost: 50,
       stats: {
         xp:1,
         hp: 6,

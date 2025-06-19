@@ -11,7 +11,7 @@
       @click="sayGoodbye()"
     />
 
-    <div class="d-flex justify-center align-center flex-grow-1 mb-2">
+    <div class="d-flex justify-center align-center mb-2">
       <v-icon
         size="35"
         class="mr-2"
@@ -26,16 +26,21 @@
       New foe available in {{ timeLeft.minutes }}m {{ timeLeft.seconds }}s
     </p>
     <v-img
+      aspect-ratio="1.5"
       :src="useEventImage({folderName: 'bloodsport', fileName: sceneScript[sceneNumber].imagePath})"
     />
     <div class="text-body-1 text-center mb-5">
       <p
         class="py-3 px-8"
-        style="minHeight:75px; min-width: 400px; backgroundColor: black;"
+        style="minHeight:75px; backgroundColor: black;"
       >
         {{ sceneScript[sceneNumber].text }}
       </p>
     </div>
+
+    <p v-if="!currentOpponent" class="text-body-2 text-center mb-5 text-red-lighten-2">
+      No opponent available right now.
+    </p>
 
     <v-card
       v-if="currentOpponent"
@@ -89,19 +94,29 @@
       </div>
     </v-card>
     <v-card
+      v-if="currentOpponent"
       color="blue-grey-darken-4"
       class="pa-5 mb-5"
     >
       <p class="text-h6 mb-3">
         Choose Your Fighter
       </p>
+      <p
+        v-if="monstersAbleToFight.length <= 0"
+        class="text-body-2 text-center mb-5 text-red-lighten-2"
+      >
+        You have no monsters able to fight.
+        <br>
+        Visit the nursery to patch them up.
+      </p>
       <v-select
+        v-model="selectedMonster"
         :items="monstersAbleToFight"
+        :disabled="monstersAbleToFight.length <= 0"
         :item-props="coerceMonstersDataForSelect"
         :menu-props="{
           scrim: true,
         }"
-        v-model="selectedMonster"
       >
         <template #item="{ props: itemProps, item }">
           <v-list-item
@@ -132,42 +147,55 @@
           <div class="d-flex align-center justify-space-between">
             <div class="mr-5">
               <div class="d-flex align-center">
-              <p class="text-h6 mr-3">
-                {{ item.title }}
-              </p>
-              <p class="mr-3">Lvl {{ item.value.quantity }}</p>
-            </div>
-            <p>{{ item.value.stats.hp }} HP</p>
+                <p class="text-h6 mr-3">
+                  {{ item.title }}
+                </p>
+                <p class="mr-3">
+                  Lvl {{ item.value.quantity }}
+                </p>
+              </div>
+              <p>{{ item.value.stats.hp }} HP</p>
             </div>
             <v-img
-            min-width="75px"
-            max-width="75px"
-            class="mr-3"
-            :src="useGetImage(item.value)"
+              min-width="75px"
+              max-width="75px"
+              class="mr-3"
+              :src="useGetImage(item.value)"
             />
           </div>
         </template>
       </v-select>
     </v-card>
 
-    <p class="text-body-2 text-center mb-5 text-red-lighten-2">
-      Choose your fighter to start the Bloodsport.
-    </p>
-
-    <v-btn
-      class="mb-5"
-      size="x-large"
-      width="100%"
-      elevation="0"
-      color="red"
-      prepend-icon="mdi-sword"
-      append-icon="mdi-sword"
-      text="Begin Bloodsport"
-      :variant="!selectedMonster ? 'outlined' : 'elevated'"
-      :disabled="!selectedMonster"
-      @click="startDeathmatch()"
-    />
-    <div class="text-body-2">
+    <div
+      v-if="currentOpponent"
+      class="d-flex align-center justify-center"
+    >
+      <div>
+        <p class="text-body-2 text-center mb-5 text-red-lighten-2">
+          Choose your fighter to start the Bloodsport.
+        </p>
+        
+        <v-btn
+          class="mb-5"
+          size="x-large"
+          elevation="0"
+          color="red"
+          prepend-icon="mdi-sword"
+          append-icon="mdi-sword"
+          text="Begin Bloodsport"
+          :variant="!selectedMonster ? 'outlined' : 'elevated'"
+          :disabled="!selectedMonster"
+          @click="startDeathmatch()"
+        />
+      </div>
+    </div>
+    
+    <v-card
+      color="blue-grey-darken-4"
+      class="pa-5 mb-5 text-body-2"
+      max-width="400px"
+    >
       <p class="text-h5 mb-3">
         Surviving the Bloodsport
       </p>
@@ -209,7 +237,7 @@
         And you'll probably lose the little guys respect too.
       </p>
       <div />
-    </div>
+    </v-card>
   </div>
 </template>
 
@@ -271,7 +299,7 @@ const generateFight = () => {
   const cloneWinning = JSON.parse(JSON.stringify(randomItemOrEquipment))
   
   const playerLevel = calculatePlayerLevel()
-  const calculatedFrags = Math.ceil(cloneOpponent.stats.hp + playerLevel * 1.35)
+  const calculatedFrags = Math.floor(cloneOpponent.stats.hp + playerLevel * 1.15)
 
   currentOpponent.value = cloneOpponent
   currentWinnings.value = cloneWinning
@@ -284,7 +312,7 @@ const generateFight = () => {
   })
 
   const now = new Date()
-  const newFightDate = new Date(now.getTime() + 60 * 60 * 1000)
+  const newFightDate = new Date(now.getTime() + 60 * 30 * 1000)
   localRefreshDate.value = newFightDate
   saveData('bloodSportRefreshDate', newFightDate)
 }
@@ -337,24 +365,44 @@ const sceneScript = ref([
 let countdownInterval = null;
 
 onMounted(() => {
-  sayGreeting()
+  window.scrollTo(0,0)
+  const deathmatchWon = loadData('deathmatchWon')
+  if (deathmatchWon === true) {
+    sayWonFight()
+  }
+  else if (deathmatchWon === false) {
+    sayLostFight()
+  }
+  else {
+    sayGreeting()
+  }
+
+  saveData('deathmatchWon', null)
   const now = new Date()
   const savedFight = loadData('savedBloodSportFight')
   const fightRefreshDate = loadData('bloodSportRefreshDate')
 
-  if (savedFight) {
+  if (fightRefreshDate) {
+    localRefreshDate.value = fightRefreshDate
+  }
+
+  updateCountdown();
+  countdownInterval = setInterval(() => updateCountdown(), 1000);
+
+  if (savedFight != null) {
     currentOpponent.value = savedFight.opponent
     currentWinnings.value = savedFight.winnings
     currentFrags.value = savedFight.frags
-    localRefreshDate.value = fightRefreshDate
+  }
+  else {
+    currentOpponent.value = null
+    currentWinnings.value = null
+    currentFrags.value = null
   }
 
   if ((fightRefreshDate && now > fightRefreshDate) || !fightRefreshDate) {
     generateFight()
   }
-  
-  updateCountdown();
-  countdownInterval = setInterval(() => updateCountdown(), 1000);
 })
 
 const narration = new Howl({

@@ -69,7 +69,7 @@
               <Deathmatch
                 v-show="currentScene === 'deathmatch'"
                 key="deathmatch"
-                @leave-scene="swapScene('menu')"
+                @leave-scene="swapScene('bloodsport')"
               />
             </v-col>
           </v-row>

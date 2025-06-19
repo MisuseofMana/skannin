@@ -6,6 +6,7 @@ export const Stats = {
   ATTACK: 'attack',
   DEFENSE: 'defense',
   HEALTH: 'hp',
+  MAXHEALTH: 'maxhp',
   XP: 'xp'
 }
 
@@ -98,7 +99,7 @@ export const consumableDirectory = ref([
     name: "Banana",
     path: 'banana',
     type: DT.CONSUMABLE,
-    description: 'XP +10'
+    description: 'XP +8'
   },
   {
     classification: DT.CONSUMABLE,
@@ -119,51 +120,51 @@ export const consumableDirectory = ref([
     value: 3,
     damage: 0,
     cost: 4,
-    buffStat: Stats.HEALTH,
+    buffStat: Stats.MAXHEALTH,
     debuffStat: null,
     name: "Sandwich",
     path: 'sandwich',
     type: DT.CONSUMABLE,
-    description: 'HP +3'
-  },
-  {
-    classification: DT.CONSUMABLE,
-    quantity: 0,
-    value: 4,
-    damage: 0,
-    cost: 4,
-    buffStat: Stats.HEALTH,
-    debuffStat: null,
-    name: "Burger",
-    path: 'burger',
-    type: DT.CONSUMABLE,
-    description: 'HP +3'
+    description: 'MAX HP +3'
   },
   {
     classification: DT.CONSUMABLE,
     quantity: 0,
     value: 5,
     damage: 0,
-    cost: 6,
-    buffStat: Stats.HEALTH,
+    cost: 8,
+    buffStat: Stats.MAXHEALTH,
+    debuffStat: null,
+    name: "Burger",
+    path: 'burger',
+    type: DT.CONSUMABLE,
+    description: 'MAX HP +5'
+  },
+  {
+    classification: DT.CONSUMABLE,
+    quantity: 0,
+    value: 10,
+    damage: 0,
+    cost: 12,
+    buffStat: Stats.MAXHEALTH,
     debuffStat: null,
     name: "Potion",
     path: 'potion',
     type: DT.CONSUMABLE,
-    description: 'HP +5'
+    description: 'HP +10'
   },
   {
     classification: DT.CONSUMABLE,
     quantity: 0,
     value: 6,
     damage: 0,
-    cost: 7,
-    buffStat: Stats.HEALTH,
+    cost: 15,
+    buffStat: Stats.MAXHEALTH,
     debuffStat: null,
     name: "Radish",
     path: 'radish',
     type: DT.CONSUMABLE,
-    description: 'HP +6'
+    description: 'MAX HP +6'
   },
   {
     classification: DT.CONSUMABLE,
@@ -172,24 +173,24 @@ export const consumableDirectory = ref([
     damage: 2,
     cost: 15,
     buffStat: Stats.XP,
-    debuffStat: Stats.HEALTH,
+    debuffStat: Stats.MAXHEALTH,
     name: "Cigarettes",
     path: 'cigarettes',
     type: DT.CONSUMABLE,
     description: 'XP +20, HP -2'
   },
-  // {
-  //   classification: DT.CONSUMABLE,
-  //   quantity: 0,
-  //   value: 999,
-  //   damage: 0,
-  //   stat: null,
-  //   debuffStat: null,
-  //   name: "Monster Controller",
-  //   path: 'revive',
-  //   type: DT.CONSUMABLE,
-  //   description: 'Ancient technology from the early 2000s. Can rebuild a monsters essence, bringing it back from death.'
-  // },
+  {
+    classification: DT.CONSUMABLE,
+    quantity: 0,
+    value: 50,
+    damage: 0,
+    stat: Stats.XP,
+    debuffStat: null,
+    name: "Monster Controller",
+    path: 'revive',
+    type: DT.CONSUMABLE,
+    description: 'XP +50'
+  },
 ])
 
 watch(consumableDirectory, (newValue) => {
