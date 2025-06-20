@@ -9,31 +9,21 @@
         class="mb-5"
         prepend-icon="mdi-arrow-left"
         text="Back To Menu"
-        @click="emit('leave-scene')"
+        @click="leaveScene()"
       />
 
       <div class="d-flex justify-center flex-grow-1">
-      <v-icon
-        size="35"
-        class="mr-2"
-      >
-        mdi-emoticon-devil
-      </v-icon>
-      <h2 class="text-h4 mb-3">
-        Monsters
-      </h2>
-    </div>
+        <v-icon
+          size="35"
+          class="mr-2"
+        >
+          mdi-emoticon-devil
+        </v-icon>
+        <h2 class="text-h4 mb-3">
+          Monsters
+        </h2>
+      </div>
     </v-col>
-
-    <v-btn
-        size="small"
-        rounded="xl"
-        elevation="0"
-        color="red"
-        class="mb-5"
-        text="Give All Consumables"
-        @click="giveAllConsumables"
-      />
 
     <v-col
       v-for="monster in monsterDirectory"
@@ -50,6 +40,10 @@
         color="blue-grey-darken-4"
       >
         <span>
+          <div v-if="monster.quantity > 0" class="d-flex justify-space-between align-center mb-2">
+            <h2 class="text-h5">{{ monster.name }}</h2>
+            <h2 class="text-h6">Lvl {{ monster.quantity }}</h2>
+          </div>
           <v-row>
             <v-col>
               <v-img
@@ -72,21 +66,6 @@
             </v-col>
             <v-col class="my-auto">
               <div v-if="monster.quantity > 0">
-                <div class="d-flex justify-space-between align-center mb-2">
-                  <h2 class="text-h5">{{ monster.name }}</h2>
-                  <h2 class="text-h6">Lvl {{ monster.quantity }}</h2>
-                </div>
-                <div class="d-flex align-center mb-2">
-                  <p class="text-body-1 mr-2">XP: </p>
-                  <v-progress-linear 
-                    size="x-large"
-                    height="20px"
-                    rounded
-                    :max="calculatedXPGoal(monster.quantity)"
-                    :model-value="monster.stats.xp"
-                  />
-                  <p class="text-body-1 ml-2 text-no-wrap">{{ monster.stats.xp }} / {{ calculatedXPGoal(monster.quantity) }} </p>
-                </div>
                 <p
                   v-if="monster.stats.hp <= 0"
                   class="text-body-1 mr-5 mb-4"
@@ -98,14 +77,36 @@
                   class="text-body-1 mb-4"
                 >{{ monster.specialInfo }}</p>
               </div>
-              <div v-else class="text-center text-h2">
+              <div
+                v-else
+                class="text-center text-h2"
+              >
                 <p>???</p>
+              </div>
+            </v-col>
+          </v-row>
+
+          <v-row v-if="monster.quantity > 0">
+            <v-col>
+              <div class="d-flex align-center mx-2">
+                <p class="text-body-1 mr-2">XP: </p>
+                <v-progress-linear 
+                size="x-large"
+                height="20px"
+                rounded
+                :max="calculatedXPGoal(monster.quantity)"
+                :model-value="monster.stats.xp"
+                />
+                <p class="text-body-1 ml-2 text-no-wrap">{{ monster.stats.xp }} / {{ calculatedXPGoal(monster.quantity) }} </p>
               </div>
             </v-col>
           </v-row>
         
 
-          <v-row class="mb-3" v-if="monster.quantity > 0">
+          <v-row
+            v-if="monster.quantity > 0"
+            class="mb-3"
+          >
             <v-col cols="6">
               <div class="d-flex">
                 <v-menu location="bottom">
@@ -201,16 +202,16 @@
               >
                 <div class="d-flex align-center">
                   <v-img
-                  min-width="50px"
-                  max-width="50px"
-                  class="mr-2"
-                  :src="useGetImage(monster.equipment)"
+                    min-width="50px"
+                    max-width="50px"
+                    class="mr-2"
+                    :src="useGetImage(monster.equipment)"
                   />
                   <div>
                     <p class="text-h6">{{ monster.equipment.name }}</p>
                     <p
-                    class="text-body-1"
-                    style="max-width:100px;"
+                      class="text-body-1"
+                      style="max-width:100px;"
                     >Gives {{ monster.equipment.description }}</p>
                   </div>
                 </div>
@@ -241,7 +242,9 @@
           max-width="150px"
           :src="useGetImage(monster)"
         />
-        <p class="text-body-1">{{ monster.name }} is in the nursery.</p>
+        <p class="text-body-1">
+          {{ monster.name }} is in the nursery.
+        </p>
       </v-sheet>
     </v-col>
   </v-row>
@@ -249,6 +252,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import music from '../assets/monster/music.wav'
 import { monsterDirectory } from '@/composables/useMonsterList.js'
 import { equipmentDirectory, consumableDirectory, giveAllConsumables } from '@/composables/useItemList.js'
 import { loadData } from '@/composables/useLocalStorage.js'
@@ -257,6 +261,13 @@ import { useGetImage } from '@/composables/useImageRoute.js'
 import { sortByQuantity } from '@/composables/useSorting.js'
 
 const emit = defineEmits(['leave-scene'])
+
+const props = defineProps({
+  sceneName: {
+    type: String,
+    required: true,
+  },
+})
 
 const onlyAvailableEquipment = computed(() => {
   return equipmentDirectory.value.filter((piece) => {
@@ -359,10 +370,28 @@ const removeEquipment = (monster) => {
     monster.equipment = null
   }
 
+const sceneMusic = new Howl({
+    src: [music],
+    loop: true,
+    volume: 0,
+})
+
+const playMusic = () => {
+  if(props.sceneName != 'monsters') return
+  const id = sceneMusic.play()
+  sceneMusic.fade(0, 0.03, 1000, id);
+}
+
 onMounted(() => {
+  playMusic()
   const monsterData = loadData('savedMonsters')
   if (monsterData) {
     monsterDirectory.value = sortByQuantity(monsterData)
   }
 })
+
+const leaveScene = () => {
+  sceneMusic.stop()
+  emit('leave-scene')
+}
 </script>

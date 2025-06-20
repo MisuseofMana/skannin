@@ -1,5 +1,5 @@
 <template>
-  <div style="max-width: 400px;">
+  <div style="max-width: 300px;">
     <v-btn
       class="mb-5"
       size="x-large"
@@ -27,18 +27,51 @@
     </p>
     <v-img
       aspect-ratio="1.5"
+      min-width="300px"
+      max-width="300px"
       :src="useEventImage({folderName: 'bloodsport', fileName: sceneScript[sceneNumber].imagePath})"
     />
     <div class="text-body-1 text-center mb-5">
       <p
         class="py-3 px-8"
-        style="minHeight:75px; backgroundColor: black;"
+        style="minHeight:75px; max-width: 300px; backgroundColor: black;"
       >
         {{ sceneScript[sceneNumber].text }}
       </p>
     </div>
 
-    <p v-if="!currentOpponent" class="text-body-2 text-center mb-5 text-red-lighten-2">
+    <v-card
+      v-if="winningsAfterFight"
+      color="blue-grey-darken-4"
+      class="pa-5 mb-5"
+    >
+      <div class="text-center mb-5">
+        <p class="text-h5 text-center">
+          Your winnings from the last fight have been added to your inventory.
+        </p>
+      </div>
+      <div class="d-flex align-center justify-center">
+        <v-img
+          max-width="100px"
+          :src="useGetImage(winningsAfterFight.winnings)"
+        />
+        <div class="d-flex align-center justify-center">
+          <v-img
+            max-width="100px"
+            min-width="100px"
+            :src="useGetImage(fragmentDirectory[0])"
+          />
+          <p class="text-h4">
+            x {{ winningsAfterFight.frags }}
+          </p>
+        </div>
+      </div>
+    </v-card>
+
+    <p
+      v-if="!currentOpponent"
+      class="text-body-2 text-center mb-5 text-red-lighten-2"
+    >
       No opponent available right now.
     </p>
 
@@ -177,7 +210,6 @@
         </p>
         
         <v-btn
-          class="mb-5"
           size="x-large"
           elevation="0"
           color="red"
@@ -190,6 +222,20 @@
         />
       </div>
     </div>
+
+    <div class="d-flex align-center justify-center">
+      <v-img
+        class="mr-5"
+        max-width="100px"
+        min-width="100px"
+        src="@/assets/bloodsport/rps-wheel.png"
+      />
+      <v-img
+        max-width="125px"
+        min-width="125px"
+        src="@/assets/bloodsport/monster-type-wheel.png"
+      />
+    </div>
     
     <v-card
       color="blue-grey-darken-4"
@@ -199,16 +245,16 @@
       <p class="text-h5 mb-3">
         Surviving the Bloodsport
       </p>
-      <div class="d-flex align-center justify-center">
-        <v-img
-          class="mr-5"
-          max-width="150px"
-          min-width="150px"
-          src="@/assets/bloodsport/rps-wheel.png"
-        />
+      <div>
         <p class="mb-3">
           Play rounds of rock, paper, scissors against your opponent to determine which monster gets hurt and by how much until one of the monsters is dead.
         </p>
+        <v-img
+          class="mx-auto mb-3"
+          max-width="100px"
+          min-width="100px"
+          src="@/assets/bloodsport/rps-wheel.png"
+        />
       </div>
       <p class="mb-3">
         If you win a round, you'll deal damage to your opponent.
@@ -219,22 +265,22 @@
       <p>
         If you lose a round, your monster will take damage.
       </p>
-      <div class="d-flex align-center justify-center">
+      <div>
         <p class="mb-3">
           Monsters have different elemental strengths and weaknesses. If a monster takes damage from an element it's weak to, it will take extra damage. The level of a monster and it's equipment also determine how much damage it can deal and take.
         </p>
         <v-img
           class="mx-auto mb-3"
-          max-width="150px"
-          min-width="150px"
+          max-width="125px"
+          min-width="125px"
           src="@/assets/bloodsport/monster-type-wheel.png"
         />
       </div>
       <p class="mb-3">
-        If your monster comes out alive, even just with one HP, you'll claim the winnings. If your monster dies, the winnings are lost and it will cost a hefty fee to bring your monster back from the brink of death.
+        If your monster comes out alive, even just with one HP, you'll claim the winnings. If your monster dies, the winnings are lost and it will cost a hefty fee to bring your monster back from the brink of death at the nursery.
       </p>
       <p class="mb-3">
-        And you'll probably lose the little guys respect too.
+        And you'll probably lose the little thing's respect too.
       </p>
       <div />
     </v-card>
@@ -244,6 +290,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import audio from '../assets/bloodsport/audio.wav'
+import music from '../assets/bloodsport/music2.wav'
 import { useEventImage, useGetImage } from '@/composables/useImageRoute'
 import { fragmentDirectory } from '@/composables/useItemList'
 import { monsterDirectory } from '@/composables/useMonsterList'
@@ -290,16 +337,17 @@ const generateFight = () => {
   const randomOpponent = monsterDirectory.value[useRandomNumber(0, monsterDirectory.value.length - 1)]
   const cloneOpponent = JSON.parse(JSON.stringify(randomOpponent))
 
-  cloneOpponent.quantity = useRandomNumber(1, 3)
-  cloneOpponent.stats.hp = cloneOpponent.stats.hp * cloneOpponent.quantity
-  cloneOpponent.stats.maxhp = cloneOpponent.stats.hp
+  cloneOpponent.quantity = Math.floor(calculatePlayerLevel() / 3) + 1
+  const calculateOpponentHp = (cloneOpponent.stats.maxhp) + (cloneOpponent.quantity * 2)
+  cloneOpponent.stats.hp = calculateOpponentHp
+  cloneOpponent.stats.maxhp = calculateOpponentHp
   
-  const itemsAndEquipment = [...consumableDirectory.value, ...equipmentDirectory.value]
-  const randomItemOrEquipment = itemsAndEquipment[useRandomNumber(0, itemsAndEquipment.length - 1)]
-  const cloneWinning = JSON.parse(JSON.stringify(randomItemOrEquipment))
+  const equipmentWinnings =  [...equipmentDirectory.value]
+  const randomEquipment = equipmentWinnings[useRandomNumber(0, equipmentWinnings.length - 1)]
+  const cloneWinning = JSON.parse(JSON.stringify(randomEquipment))
   
   const playerLevel = calculatePlayerLevel()
-  const calculatedFrags = Math.floor(cloneOpponent.stats.hp + playerLevel * 1.15)
+  const calculatedFrags = Math.floor(cloneOpponent.stats.hp + playerLevel * 1.25)
 
   currentOpponent.value = cloneOpponent
   currentWinnings.value = cloneWinning
@@ -362,18 +410,40 @@ const sceneScript = ref([
   },
 ])
 
+const sceneMusic = new Howl({
+    src: [music],
+    loop: true,
+    volume: 0,
+})
+
+const playMusic = () => {
+  if(props.sceneName != 'bloodsport') return
+  const id = sceneMusic.play()
+  sceneMusic.fade(0, 0.01, 1000, id);
+}
+
+const winningsAfterFight = ref(null)
+
 let countdownInterval = null;
 
 onMounted(() => {
   window.scrollTo(0,0)
   const deathmatchWon = loadData('deathmatchWon')
+  const savedWinnings = loadData('savedBloodSportFight')
   if (deathmatchWon === true) {
+    winningsAfterFight.value = savedWinnings
+    saveData('savedDeathmatchData', null)
+    saveData('savedBloodSportFight', null)
     sayWonFight()
   }
   else if (deathmatchWon === false) {
     sayLostFight()
+    saveData('savedBloodSportFight', null)
+    saveData('savedDeathmatchData', null)
   }
+
   else {
+    playMusic()
     sayGreeting()
   }
 
@@ -407,6 +477,7 @@ onMounted(() => {
 
 const narration = new Howl({
   src: [audio],
+  volume: 0.2,
   sprite: {
     'hey': [35,455],
     'deathFight': [8587,2626],
@@ -435,6 +506,7 @@ const calculatePlayerLevel = () => {
 
 const startDeathmatch = () => {
   if (!selectedMonster.value) return
+  sceneMusic.stop()
   emit('start-deathmatch', {
     monster: selectedMonster.value,
     opponent: currentOpponent.value,
@@ -445,11 +517,6 @@ const startDeathmatch = () => {
 
 const sayGreeting = () => {
   sceneNumber.value = useRandomNumber(0, 2)
-  playAudio()
-}
-
-const playCantBuy = () => {
-  sceneNumber.value = 3
   playAudio()
 }
 
@@ -464,6 +531,7 @@ const sayLostFight = () => {
 }
 
 const sayGoodbye = () => {
+  sceneMusic.stop()
   sceneNumber.value = 7
   playAudio()
   emit('leave-scene')

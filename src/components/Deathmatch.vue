@@ -83,6 +83,7 @@
           </p>
           <v-img
             aspect-ratio="1"
+            :class="{'dead': youWin}"
             :src="useGetImage(localDeathmatchData?.opponent)"
           />
           <v-icon
@@ -175,6 +176,7 @@
 
 <script setup>
 import { useGetImage, useRPSImage } from '@/composables/useImageRoute'
+import music from '../assets/bloodsport/music.wav'
 import { loadData, saveData } from '@/composables/useLocalStorage'
 import { onMounted, ref, watch } from 'vue'
 import { useRandomNumber } from '@/composables/useNumberInterpretor'
@@ -182,6 +184,13 @@ import { monsterDirectory } from '@/composables/useMonsterList'
 import { fragmentDirectory, equipmentDirectory, consumableDirectory } from '@/composables/useItemList'
 
 import { animate } from 'animejs'
+
+const props = defineProps({
+  sceneName: {
+    type: String,
+    required: true,
+  },
+})
 
 const localDeathmatchData = ref(null)
 const pause = ref(false)
@@ -252,7 +261,20 @@ const readOpponent = () => {
 
 const turnLog = ref([])
 
+const sceneMusic = new Howl({
+    src: [music],
+    loop: true,
+    volume: 0,
+})
+
+const playMusic = () => {
+  if(props.sceneName != 'deathmatch') return
+  const id = sceneMusic.play()
+  sceneMusic.fade(0, 0.01, 1000, id);
+}
+
 onMounted(() => {
+  playMusic()
   readOpponent()
   const fightData = loadData('savedDeathmatchData')
   if (fightData) {
@@ -308,12 +330,25 @@ const handleBloodAnimation = async (element) => {
     })
   }
 
+const loseMatch = () => {
+  youDied.value = true
+  handleDeathAnimation('#yourBlood')
+}
+
+const winMatch = () => {
+  youWin.value = true
+  handleDeathAnimation('#opponentBlood')
+}
+
 const handleDeathAnimation = async(element) => {
   pause.value = true
   
   if (youDied.value) {
     const deadMonsterTarget = monsterDirectory.value.find(m => m.name == localDeathmatchData.value.monster.name)
     deadMonsterTarget.stats.hp = 0
+    saveData('savedDeathmatchData', null)
+    saveData('savedDeathmatchLog', null)
+    saveData('savedBloodSportFight', null)
     saveData('deathmatchWon', false)
   }
 
@@ -324,9 +359,6 @@ const handleDeathAnimation = async(element) => {
       scale: [1, 10],
       duration: 3000,
   })
-
-  saveData('savedDeathmatchData', null)
-  saveData('savedBloodSportFight', null)
 
   if (youWin.value) {
     saveData('deathmatchWon', true)
@@ -343,6 +375,7 @@ const handleDeathAnimation = async(element) => {
       equipmentTarget.quantity += 1
     }
   }
+  sceneMusic.stop()
   emit('leave-scene')
 }
 
@@ -375,7 +408,8 @@ const divvyDamageUp = async(roundResult) => {
     }
     if (elementWeakAgainst[attackingElement] === defendingElement) {
       return -1
-  }
+    }
+    return 0
 }
 
   const adjustForEquipment = (equipment) => {
@@ -398,7 +432,7 @@ const divvyDamageUp = async(roundResult) => {
 
   const takeDamage = async (damage) => {
     let damageToTake = damage
-    if (localDeathmatchData.value.monster.equipment.buffStat === 'defense') {
+    if (localDeathmatchData.value.monster.equipment?.buffStat === 'defense') {
       damageToTake = Math.max(1, damage - localDeathmatchData.value.monster.equipment.value)
     }
     for (let i = 0; i < damageToTake; i++) {

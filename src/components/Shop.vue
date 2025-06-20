@@ -29,12 +29,13 @@
     <v-img
       aspect-ratio="1.5"
       min-width="300px"
+      max-width="300px"
       :src="useEventImage({folderName: 'shop', fileName: sceneScript[sceneNumber].imagePath})"
     />
     <div class="text-body-1 text-center">
       <p
         class="py-3 px-8"
-        style="minHeight:75px; backgroundColor: black;"
+        style="minHeight:75px; max-width: 300px; backgroundColor: black;"
       >
         {{ sceneScript[sceneNumber].text }}
       </p>
@@ -50,38 +51,21 @@
         width="100%"
         class="pa-5"
         rounded
+        ripple="false"
         @click="attemptPurchase(item)"
       >
-        <div
-          v-if="item.bought"
-          class="d-flex
-          align-center justify-space-between"
-        > 
+        <div class="d-flex align-center justify-space-between"> 
           <v-img 
             min-width="100px"
             max-width="100px"
             :src="useGetImage(item)"
           />
-          <div class="mr-5">
-            <p class="text-white font-weight-black">
-              SOLD OUT
-            </p>
-          </div>
-        </div>
-        <div
-          v-else
-          class="d-flex align-center justify-space-between"
-        >
-          <v-img 
-            min-width="100px"
-            max-width="100px"
-            :src="useGetImage(item)"
-          />
-          <div class="mr-5">
-            <p class="text-h6 text-right">
-              {{ item.cost }} Frag
-            </p>
-          </div>
+          <p v-if="item.bought" class="text-white text-h6 font-weight-black">
+            SOLD OUT
+          </p>
+          <p v-else class="text-black text-h6 font-weight-black">
+            {{ item.cost }} Frag
+          </p>
         </div>
       </v-card>
     </div>
@@ -91,6 +75,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import audio from '../assets/shop/audio.wav'
+import music from '../assets/shop/music.wav'
 import { useEventImage, useGetImage } from '@/composables/useImageRoute'
 import { consumableDirectory, equipmentDirectory, fragmentDirectory } from '@/composables/useItemList'
 import { monsterDirectory } from '@/composables/useMonsterList'
@@ -178,9 +163,25 @@ const timeLeft = ref({
   seconds: 0,
 });
 
+const sceneMusic = new Howl({
+    src: [music],
+    loop: true,
+    volume: 0,
+})
+
+const playMusic = () => {
+  if(props.sceneName != 'shop') return
+  const spriteName = sceneScript.value[sceneNumber.value].audioTrack
+  const greetingLength = narration._sprite[spriteName][1]
+  const id = sceneMusic.play()
+  sceneMusic.fade(0, 0.1, greetingLength + 4000, id);
+}
 
 onMounted(() => {
+  playMusic()
   sayGreeting()
+
+  sceneMusic.play()
 
   const now = new Date()
   const shopStock = loadData('shopInventory')
@@ -222,6 +223,7 @@ const sayGoodPurchase = () => {
 
 const sayGoodbye = () => {
   sceneNumber.value = useRandomNumber(7, 8)
+  sceneMusic.stop()
   playAudio()
   emit('leave-scene')
   clearInterval(countdownInterval);
@@ -283,6 +285,7 @@ const getMonster = (monster) => {
 
 const narration = new Howl({
   src: [audio],
+  volume: 0.2,
   sprite: {
     'welcome': [0,1589],
     'half': [1862, 4195],

@@ -39,7 +39,7 @@
         @click="emit('switch-scene', 'bloodsport')"
       />
     </v-col>
-    <v-divider thickness="3" class="my-8" color="white"/>
+    <v-divider thickness="3" class="my-3 mx-3" color="white"/>
     <v-col
       cols="12"
     >
@@ -47,7 +47,7 @@
         size="x-large"
         width="100%"
         elevation="0"
-        color="red"
+        color="purple"
         prepend-icon="mdi-emoticon-devil"
         text="Monsters"
         @click="emit('switch-scene', 'monsters')"
@@ -62,21 +62,8 @@
         elevation="0"
         color="blue"
         prepend-icon="mdi-briefcase"
-        text="Items"
-        @click="emit('switch-scene', 'consumable')"
-      />
-    </v-col>
-    <v-col
-      cols="12"
-    >
-      <v-btn
-        size="x-large"
-        width="100%"
-        elevation="0"
-        color="blue"
-        prepend-icon="mdi-hanger"
-        text="Equipment"
-        @click="emit('switch-scene', 'equipment')"
+        text="Inventory"
+        @click="emit('switch-scene', 'inventory')"
       />
     </v-col>
   </v-row>

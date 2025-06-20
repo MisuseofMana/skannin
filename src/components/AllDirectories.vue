@@ -54,11 +54,12 @@
               <Monsters
                 v-show="currentScene === 'monsters'"
                 key="monsters"
+                :scene-name="currentScene"
                 @leave-scene="swapScene('menu')"
               />
-              <Consumables
-                v-show="currentScene === 'consumable'"
-                key="consumable"
+              <Inventory
+                v-show="currentScene === 'inventory'"
+                key="inventory"
                 @leave-scene="swapScene('menu')"
               />
               <Equipment
@@ -69,6 +70,7 @@
               <Deathmatch
                 v-show="currentScene === 'deathmatch'"
                 key="deathmatch"
+                :scene-name="currentScene"
                 @leave-scene="swapScene('bloodsport')"
               />
             </v-col>

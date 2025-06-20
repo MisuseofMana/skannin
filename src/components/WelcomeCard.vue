@@ -19,7 +19,6 @@
       size="x-large"
       elevation="0"
       color="primary"
-      width="100%"
       :text="sceneScript[sceneNumber].response"
       @click="advanceScene()"
     />
@@ -70,7 +69,7 @@
         :src="useGetImage(fragmentDirectory[0])"
         />
         <p class="text-h5">
-          55 Fragments
+          100 Fragments
         </p>
       </div>
     </v-sheet>
@@ -110,27 +109,33 @@ const sceneNumber = ref(0)
 
 const sceneScript = ref([
   {
+    imagePath: `door`,
+    text: `...`,
+    response: `Enter the lab.`,
+    audioTrack: null,
+  },
+  {
     imagePath: `unaware`,
     text: `...`,
-    response: `Uhh... excuse me.`,
-    audioTrack: null,
+    response: `"Uhh... excuse me.""`,
+    audioTrack: 'door',
   },
   {
     imagePath: `shrug`,
     text: `What!? Who are you?`,
-    response: `No, who are YOU?!`,
+    response: `"No, who are YOU?!""`,
     audioTrack: 'what',
   },
   {
     imagePath: `pointing`,
     text: `How'd you even get into my lab, kiddo?`,
-    response: `I just walked in.`,
+    response: `"The door was open..."`,
     audioTrack: 'how',
   },
   {
     imagePath: `shrug`,
     text: `No matter, since you're here you can take this off my hands.`,
-    response: `Take what now?`,
+    response: `"Take what now?""`,
     audioTrack: 'matter',
   },
   {
@@ -142,27 +147,28 @@ const sceneScript = ref([
   {
     imagePath: `hatch2`,
     text: `Keep 'em safe now, understand?`,
-    response: `Whatever you say.`,
+    response: `"Whatever you say."`,
     audioTrack: 'care',
   },
   {
     imagePath: `wagFinger`,
     text: `If they kick the bucket, that's on you alright?`,
-    response: `...`,
+    response: `"Okay dude."`,
     audioTrack: 'bucket',
   },
   {
     imagePath: `pointing`,
     text: `And DON'T USE THE LIL THING FOR BLOOD SPORTS, OKAY?!`,
-    response: `Okay, okay, geez.`,
+    response: `Okay, okay, geez!`,
     audioTrack: 'blood',
   },
 ])
 
 const narration = new Howl({
   src: [audio],
+  volume: 0.05,
   sprite: {
-    'creed': [0,0],
+    'door': [20214,24348],
     'what': [104, 1502],
     'how': [2207, 2099],
     'matter': [4809, 3395],
@@ -191,10 +197,13 @@ onBeforeMount(() => {
     const equipPick = useRandomNumber(0, equipmentDirectory.value.length - 2)
     
     monsterDirectory.value[monsterPick].quantity += 2
+    monsterDirectory.value[monsterPick].stats.hp += 5
+    monsterDirectory.value[monsterPick].stats.maxhp += 5
+
     consumableDirectory.value[itemPick].quantity += 1
     equipmentDirectory.value[equipPick].quantity += 1
     equipmentDirectory.value[equipPick+1].quantity += 1
-    fragmentDirectory.value[0].quantity = 55
+    fragmentDirectory.value[0].quantity = 100
 
     monsterPicked.value = monsterDirectory.value[monsterPick]
     itemPicked.value = consumableDirectory.value[itemPick]
