@@ -51,7 +51,6 @@
         width="100%"
         class="pa-5"
         rounded
-        ripple="false"
         @click="attemptPurchase(item)"
       >
         <div class="d-flex align-center justify-space-between"> 

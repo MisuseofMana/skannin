@@ -26,7 +26,7 @@
       <v-row class="mb-15">
         <v-col>
           <p class="text-body-2 text-grey-darken-1 mb-6">
-            v.0.1.1
+            v.0.1.2
           </p>
           <h2 class="text-h4 mb-2">
             About
@@ -59,10 +59,9 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref } from 'vue'
 
 const isModalOpen = ref(false)
-const clearAllDataPrimed = ref(false)
 
 const openModal = () => {
    isModalOpen.value = !isModalOpen.value

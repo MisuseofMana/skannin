@@ -44,7 +44,7 @@
       >
         <v-card
           :color="monster.nurseryData.isInNursery ? 'teal-darken-2' : 'blue-grey-darken-2'"
-          class="pa-5 d-flex align-center justify-space-between"
+          class="pa-5 my-5 d-flex align-center justify-space-between"
           rounded
           @click="giveOrRetrieveMonster(monster)"
         >
@@ -311,23 +311,12 @@ const sayGoodbye = () => {
   clearInterval(countdownInterval);
 }
 
-const _spoofMonsterData = () => {
-  monsterDirectory.value.forEach(m => {
-    m.quantity = useRandomNumber(0, 1)
-    m.nurseryData.isInNursery = false
-    m.stats.hp = useRandomNumber(0, 10)
-    m.stats.maxhp = 10
-  })
-  fragmentDirectory.value[0].quantity = 100
-}
-
 const putMonsterInNursery = (monster) => {
   const haveEnoughFragToHeal = fragmentDirectory.value[0].quantity >= getFragToHeal(monster)
 
   if (haveEnoughFragToHeal) {
     monster.nurseryData.isInNursery = true
-    monster.nurseryData.releaseDate = new Date(Date.now() + getTimeToHealed(monster) * 10 * 1000)
-    console.log(monster.nurseryData.releaseDate)
+    monster.nurseryData.releaseDate = new Date(Date.now() + getTimeToHealed(monster) * 60 * 2 * 1000)
     fragmentDirectory.value[0].quantity -= getFragToHeal(monster)
     startTimers()
     sayGoodPurchase()
