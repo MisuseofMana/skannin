@@ -59,6 +59,11 @@
             :src="useGetImage(item)"
           />
           <p v-if="item.quantity > 0">{{ item.description }}</p>
+					<v-btn v-if="item.quantity > 0"
+						variant="tonal"
+						color="teal"
+						@click="sellItem(item)"
+					/>
           <p v-else>???</p>
         </span>
       </v-sheet>
@@ -67,8 +72,8 @@
 </template>
 
 <script setup>
-import { consumableDirectory, equipmentDirectory } from '@/composables/useItemList.js'
-import { loadData } from '@/composables/useLocalStorage.js'
+import { consumableDirectory, equipmentDirectory, fragmentDirectory } from '@/composables/useItemList.js'
+import { loadData } from '@/composables/useLocalStorage.js' 
 import { onMounted, computed } from 'vue'
 import { useGetImage } from '@/composables/useImageRoute.js'
 import { sortByQuantity } from '@/composables/useSorting.js'
@@ -78,6 +83,24 @@ const emit = defineEmits(['leave-scene'])
 const allItems = computed(() => {
   return sortByQuantity([...consumableDirectory.value, ...equipmentDirectory.value])
 })
+
+const getItemSource = (item) => {
+	const itemtype = item.classification
+	const isEquipment = itemType === 'equipment'
+	const isItem = itemType === 'consumable'
+	if (isEquipment) {
+		return equipmentDirectory.value.find(e => e.name === item.name)
+	}
+	if (isItem) {
+		return consumableDirectory.value.find(e => e.name === item.name)
+	}
+}
+
+
+const sellItem = (item) => {
+	fragmentDirectory.value[0].quantity += Math.floor(item.cost / 2)
+ 	getItemSource(item).quantity -= 1
+}
 
 onMounted(() => {
   const savedConsumables = loadData('savedInventory')
@@ -90,7 +113,6 @@ onMounted(() => {
   if (savedEquipment) {
     equipmentDirectory.value = savedEquipment
   }
-  
 })
 
 </script>
