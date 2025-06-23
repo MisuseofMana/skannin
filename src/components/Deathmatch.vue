@@ -121,6 +121,7 @@
             aspect-ratio="1"
             max-width="90px"
             min-width="90px"
+						:alt="handType"
             :src="useRPSImage(handType)"
           />
         </v-card>
@@ -142,6 +143,7 @@
                 aspect-ratio="1"
                 max-width="60px"
                 min-width="60px"
+								:alt="turn.you"
                 :src="useRPSImage(turn.you)"
                 :class="{'loseTint': turn.roundResult === 'Lose'}"
               />
@@ -150,6 +152,7 @@
                 aspect-ratio="1"
                 max-width="60px"
                 min-width="60px"
+								:alt="turn.opponent"
                 :src="useRPSImage(turn.opponent)"
                 :class="{'loseTint': turn.roundResult === 'Win'}"
               />
