@@ -60,10 +60,12 @@
           />
           <p v-if="item.quantity > 0">{{ item.description }}</p>
 					<v-btn v-if="item.quantity > 0"
-						variant="tonal"
+						rounded="xl"
 						color="teal"
 						@click="sellItem(item)"
-					/>
+					>
+						Sell One
+					</v-btn>
           <p v-else>???</p>
         </span>
       </v-sheet>
@@ -85,7 +87,7 @@ const allItems = computed(() => {
 })
 
 const getItemSource = (item) => {
-	const itemtype = item.classification
+	const itemType = item.classification
 	const isEquipment = itemType === 'equipment'
 	const isItem = itemType === 'consumable'
 	if (isEquipment) {
