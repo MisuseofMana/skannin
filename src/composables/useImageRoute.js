@@ -10,7 +10,7 @@ export const useGetImage = ({type = 'placeholder', name = 'placeholder', classif
 }
 
 export const useRPSImage = (imageName) => {
-    return new URL(`../assets/bloodsport/${imageName}.png`, import.meta.url).href
+    return new URL(`../assets/bloodsport/${imageName.toLowerCase()}.png`, import.meta.url).href
 }
 
 export const useEventImage = ({folderName = 'intro', fileName}) => {
